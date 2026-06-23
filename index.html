@@ -34,16 +34,32 @@
 
         .container { max-width: 800px; margin: 0 auto; width: 100%; position: relative; z-index: 2; }
         
-        h1 { 
-            font-size: 2.2rem; 
+        /* ⚽ 顶部双标题定制（参照SPEED RUSH风格） */
+        .top-event-title {
+            font-size: 1.6rem; 
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 2px;
             background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            margin: 0;
+            filter: drop-shadow(0 2px 8px rgba(255,0,127,0.3));
+        }
+
+        h1 { 
+            font-size: 2.5rem; 
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 5px;
             margin-bottom: 5px;
-            filter: drop-shadow(0 2px 10px rgba(255,0,127,0.3));
+            filter: drop-shadow(0 2px 12px rgba(255,0,127,0.4));
+            /* ⚡ 注入霓虹灯管呼吸闪烁特效 */
+            animation: neon-flicker 2s infinite alternate;
         }
 
         /* 📍 副标题：请参赛者们入场签到 */
@@ -57,7 +73,6 @@
             text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
             animation: pulse-text 2s infinite;
         }
-
 
         /* 🏆 结果公告栏优化 */
         #resultView { 
@@ -135,37 +150,49 @@
         .status-lock { color: var(--warning-color); background: rgba(255, 170, 0, 0.1); border: 1px solid rgba(255, 170, 0, 0.2); }
         .status-go { color: var(--success-color); background: rgba(57, 255, 20, 0.1); border: 1px solid rgba(57, 255, 20, 0.3); animation: breath 1s infinite alternate; }
 
-        /* 🔘 员工端：超炫抢答大按钮 */
+        /* 🔘 员工端：超炫赛博“足球”抢答大按钮 */
         #rushButton { 
             width: 240px; 
             height: 240px; 
             border-radius: 50%; 
-            font-size: 2rem; 
-            font-weight: 900;
-            background: radial-gradient(circle at center, #252538 0%, #151522 100%); 
-            color: #555566; 
-            box-shadow: 0 10px 0 #0d0d16, inset 0 4px 10px rgba(255,255,255,0.05); 
+            font-size: 2.2rem; 
+            font-weight: 950;
+            /* ⚽ 足球经典皮革网格纹路 */
+            background: 
+                radial-gradient(circle at center, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.5) 100%),
+                repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 2px, transparent 2px, transparent 40px),
+                repeating-linear-gradient(-45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 2px, transparent 2px, transparent 40px),
+                #1a1a2e;
+            color: #444455; 
+            box-shadow: 0 12px 0 #080812, inset 0 6px 15px rgba(255,255,255,0.1), 0 15px 25px rgba(0,0,0,0.6); 
             margin: 30px auto; 
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 6px solid #2d2d3f; 
-            transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            border: 8px solid #28283d; 
+            transition: all 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
             cursor: not-allowed;
             position: relative;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
-        /* 激活状态：原地炸裂变红 */
+        
+        /* ⚽ 足球激活状态：通体炸裂变红，足球缝隙透出电竞霓虹光芒 */
         #rushButton.active { 
-            background: radial-gradient(circle at center, #ff2a6d 0%, #910031 100%); 
+            background: 
+                radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.4) 100%),
+                repeating-linear-gradient(45deg, rgba(255,240,245,0.1) 0px, rgba(255,240,245,0.1) 2px, transparent 2px, transparent 40px),
+                repeating-linear-gradient(-45deg, rgba(255,240,245,0.1) 0px, rgba(255,240,245,0.1) 2px, transparent 2px, transparent 40px),
+                #ff2a6d; 
             color: white; 
-            box-shadow: 0 10px 0 #5a001e, 0 0 40px rgba(255, 42, 109, 0.6); 
-            border: 6px solid #ff6596; 
+            box-shadow: 0 12px 0 #5a001e, 0 0 50px rgba(255, 42, 109, 0.8); 
+            border: 8px solid #ff6596; 
             cursor: pointer; 
-            animation: pulse 0.6s infinite alternate, shake 0.1s infinite;
+            animation: pulse 0.6s infinite alternate, shake 0.08s infinite;
         }
         #rushButton:active:not(:disabled) {
-            transform: translateY(8px);
-            box-shadow: 0 2px 0 #5a001e, 0 0 20px rgba(255, 42, 109, 0.4);
+            transform: translateY(10px);
+            box-shadow: 0 2px 0 #5a001e, 0 0 25px rgba(255, 42, 109, 0.5);
         }
 
         /* ⏳ 综艺感3秒倒计时遮罩层 */
@@ -191,10 +218,18 @@
         .admin-action-btn { background: linear-gradient(135deg, #00f0ff 0%, #0072ff 100%); width: auto; max-width: none; box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3); margin-bottom: 15px; }
 
         /* 🎬 炫酷动画特效 */
-        @keyframes pulse { 0% { box-shadow: 0 10px 0 #5a001e, 0 0 30px rgba(255, 42, 109, 0.5); } 100% { box-shadow: 0 10px 0 #5a001e, 0 0 60px rgba(255, 42, 109, 0.9); } }
+        @keyframes neon-flicker {
+            0%, 100% { filter: drop-shadow(0 2px 12px rgba(255,0,127,0.5)); opacity: 1; }
+            95% { filter: drop-shadow(0 2px 12px rgba(255,0,127,0.5)); opacity: 1; }
+            96% { opacity: 0.85; filter: drop-shadow(0 2px 4px rgba(255,0,127,0.2)); }
+            97% { opacity: 1; }
+            98% { opacity: 0.9; }
+            99% { opacity: 1; }
+        }
+        @keyframes pulse { 0% { box-shadow: 0 12px 0 #5a001e, 0 0 30px rgba(255, 42, 109, 0.5); } 100% { box-shadow: 0 12px 0 #5a001e, 0 0 60px rgba(255, 42, 109, 0.9); } }
         @keyframes breath { 0% { opacity: 0.6; } 100% { opacity: 1; } }
         @keyframes popIn { 0% { transform: scale(0.7); opacity: 0.5; } 100% { transform: scale(1.1); opacity: 1; } }
-        @keyframes shake { 0% { transform: translate(0, 0) rotate(0deg); } 25% { transform: translate(-1px, 1px) rotate(-0.5deg); } 50% { transform: translate(1px, -1px) rotate(0.5deg); } 75% { transform: translate(-1px, -1px) rotate(0deg); } 100% { transform: translate(1px, 1px) rotate(0deg); } }
+        @keyframes shake { 0% { transform: translate(0, 0) rotate(0deg); } 25% { transform: translate(-1px, 1px) rotate(-0.3deg); } 50% { transform: translate(1px, -1px) rotate(0.3deg); } 75% { transform: translate(-1px, -1px) rotate(0deg); } 100% { transform: translate(1px, 1px) rotate(0deg); } }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -206,7 +241,11 @@
     </div>
 
     <div class="container">
+        <!-- 🏆 新增：赛事第一行大标题 -->
+        <div class="top-event-title">MCE 大力神杯系列赛事</div>
+        <!-- ⚡ 霓虹灯管闪烁核心大标题 -->
         <h1 id="mainTitle">⚡ SPEED RUSH ⚡</h1>
+        
         <div id="resultView">🏆 MCE 大力神杯系列赛 - 竞速抢答 </div>
 
         <div id="loginView" class="hidden class-panel">
@@ -219,6 +258,7 @@
         <div id="playerView" class="hidden">
             <p style="font-size: 1.1rem; color: #aaa; margin: 5px 0;">当前身份：<span id="myTitle" style="color:var(--secondary-color); font-weight: 900;"></span></p>
             <div id="statusText" class="status-lock">🔒 请听主持人宣读题目...</div>
+            <!-- ⚽ 抢答器足球按键 -->
             <button id="rushButton" disabled onclick="pressButton()">HOLD</button>
         </div>
 
@@ -254,7 +294,9 @@
 
             if (isClientAdmin) {
                 document.getElementById('adminView').classList.remove('hidden');
-                document.getElementById('mainTitle').innerText = "💻 MCE 赛事中控台";
+                document.getElementById('mainTitle').innerText = "SPEED RUSH";
+                // 让控制台的双标题排版优雅化
+                document.querySelector('.top-event-title').innerText = "💻 MCE COMMAND PANEL";
                 
                 let staffUrl = window.location.origin + window.location.pathname;
                 new QRCode(document.getElementById("qrcode"), {
