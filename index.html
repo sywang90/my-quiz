@@ -303,7 +303,7 @@
 <body>
 
     <div id="countdownOverlay" class="hidden">
-        <div id="countdownTips">🏆 大力神杯系列赛 - 预备 🏆</div>
+        <div id="countdownTips">🏆 大力神杯系列赛 🏆</div>
         <div id="countdownNumber">3</div>
     </div>
 
@@ -323,12 +323,12 @@
             <div class="top-event-title">大力神杯赛事</div>
         </div>
         
-        <h1 id="mainTitle">⚡ SPEED RUSH ⚡</h1>
+        <h1 id="mainTitle"> SPEED ⚡ RUSH </h1>
         
         <div id="resultView">🏆 加入战队，竞速抢答！ </div>
 
         <div id="loginView" class="hidden glass-panel">
-            <input type="text" id="usernameInput" placeholder="请输入您所属赛事区域（如：北一区）" autocomplete="off"><br>
+            <input type="text" id="usernameInput" placeholder="输入您所属赛事区（如：北一区）" autocomplete="off"><br>
             <button class="action-btn" onclick="register()">锁定身份 ➡️ 入场</button>
         </div>
 
@@ -367,7 +367,7 @@
             if (isClientAdmin) {
                 document.getElementById('adminView').classList.remove('hidden');
                 document.getElementById('mainTitle').innerText = "SPEED RUSH";
-                document.querySelector('.top-event-title').innerText = "💻 MCE COMMAND PANEL";
+                document.querySelector('.top-event-title').innerText = "MCE 大力神杯中控台";
                 if(document.querySelector('.cartoon-trophy')) document.querySelector('.cartoon-trophy').style.display = 'none';
                 
                 let staffUrl = window.location.origin + window.location.pathname;
@@ -463,13 +463,13 @@
             if(document.getElementById('adminStartBtn')) document.getElementById('adminStartBtn').disabled = false;
 
             // 更新顶部结果栏
-            document.getElementById('resultView').innerText = `🏆 本题得主：【${winnerName}】 成功捧杯！`;
+            document.getElementById('resultView').innerText = `🏆 本题得主：【${winnerName}】 成功抢位！`;
 
             // 激活全屏绝杀特效遮罩层
             const burstBox = document.getElementById('burstOverlay');
             burstBox.innerHTML = `
                 <div class="smoke-cloud"></div>
-                <div class="burst-winner">🏆 绝杀：【${winnerName}】 夺得头筹！</div>
+                <div class="burst-winner">🏆 绝杀：【${winnerName}】 拔得头筹！</div>
             `;
             burstBox.classList.remove('hidden');
 
