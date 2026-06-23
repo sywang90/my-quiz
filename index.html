@@ -6,7 +6,11 @@
     <title>⚡🏆  MCE 大力神杯系列赛 - 竞速抢答 🏆⚡</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Keep+Together&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap'); /* 备用泼墨草书字库 */
+
         /* 🎨 全局赛博朋克电竞风 */
         :root {
             --bg-color: #0a0a16;
@@ -34,35 +38,39 @@
 
         .container { max-width: 800px; margin: 0 auto; width: 100%; position: relative; z-index: 2; }
         
-        /* ⚽ 顶部双标题定制（参照SPEED RUSH风格） */
+        /* 🏆 顶部超大字号国潮书法标题（参照图片泼墨风格） */
         .top-event-title {
-            font-size: 1.6rem; 
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            /* 采用泼墨草书字库，若未加载完成则用苍劲行楷备用 */
+            font-family: 'Ma Shan Zheng', 'Keep Together', 'Kaiti', 'SimSun', serif; 
+            font-size: 2.8rem; /* 🚀 字号放大，显著大于 SPEED RUSH */
+            font-weight: normal;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #ffffff 20%, var(--primary-color) 70%, var(--secondary-color) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin: 0;
-            filter: drop-shadow(0 2px 8px rgba(255,0,127,0.3));
+            padding: 0 10px;
+            line-height: 1.1;
+            /* 泼墨厚重感滤镜叠加 */
+            filter: drop-shadow(0 4px 15px rgba(255,0,127,0.5)) contrast(1.2); 
         }
 
         h1 { 
-            font-size: 2.5rem; 
+            font-size: 2.1rem; /* 🚀 适当缩减SPEED RUSH，凸显上方书法主题 */
             font-weight: 900;
+            font-family: -apple-system, sans-serif;
             text-transform: uppercase;
             letter-spacing: 4px;
             background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-top: 5px;
+            margin-top: 10px;
             margin-bottom: 5px;
             filter: drop-shadow(0 2px 12px rgba(255,0,127,0.4));
-            /* ⚡ 注入霓虹灯管呼吸闪烁特效 */
             animation: neon-flicker 2s infinite alternate;
         }
 
-        /* 📍 副标题：请参赛者们入场签到 */
+        /* 📍 副标题 */
         .sub-title {
             font-size: 1.2rem;
             color: var(--cyan-glow);
@@ -71,7 +79,6 @@
             margin-top: 5px;
             margin-bottom: 25px;
             text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
-            animation: pulse-text 2s infinite;
         }
 
         /* 🏆 结果公告栏优化 */
@@ -177,7 +184,7 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
         
-        /* ⚽ 足球激活状态：通体炸裂变红，足球缝隙透出电竞霓虹光芒 */
+        /* ⚽ 足球激活状态：通体炸裂变红 */
         #rushButton.active { 
             background: 
                 radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.4) 100%),
@@ -241,9 +248,7 @@
     </div>
 
     <div class="container">
-        <!-- 🏆 新增：赛事第一行大标题 -->
         <div class="top-event-title">MCE 大力神杯系列赛事</div>
-        <!-- ⚡ 霓虹灯管闪烁核心大标题 -->
         <h1 id="mainTitle">⚡ SPEED RUSH ⚡</h1>
         
         <div id="resultView">🏆 MCE 大力神杯系列赛 - 竞速抢答 </div>
@@ -258,7 +263,6 @@
         <div id="playerView" class="hidden">
             <p style="font-size: 1.1rem; color: #aaa; margin: 5px 0;">当前身份：<span id="myTitle" style="color:var(--secondary-color); font-weight: 900;"></span></p>
             <div id="statusText" class="status-lock">🔒 请听主持人宣读题目...</div>
-            <!-- ⚽ 抢答器足球按键 -->
             <button id="rushButton" disabled onclick="pressButton()">HOLD</button>
         </div>
 
@@ -295,7 +299,6 @@
             if (isClientAdmin) {
                 document.getElementById('adminView').classList.remove('hidden');
                 document.getElementById('mainTitle').innerText = "SPEED RUSH";
-                // 让控制台的双标题排版优雅化
                 document.querySelector('.top-event-title').innerText = "💻 MCE COMMAND PANEL";
                 
                 let staffUrl = window.location.origin + window.location.pathname;
@@ -319,6 +322,8 @@
             myName = name;
             socket.emit('register', name);
         }
+
+        function pressButton() { socket.emit('pressButton'); }
 
         socket.on('registered', (name) => {
             document.getElementById('loginView').classList.add('hidden');
@@ -380,8 +385,6 @@
                 }
             }, 1000);
         }
-
-        function pressButton() { socket.emit('pressButton'); }
 
         socket.on('quizEnd', (winnerName) => {
             clearInterval(countdownTimer); 
