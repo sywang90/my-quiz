@@ -42,8 +42,10 @@
 
         .container { max-width: 800px; margin: 0 auto; width: 100%; position: relative; z-index: 2; }
         
+        /* 🏆 标题包裹层 - 🚀 修正：修改为 flex-direction: column 让奖杯和文字上下排布 */
         .header-wrap {
             display: inline-flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             margin: 0 auto;
@@ -62,12 +64,14 @@
             animation: gold-glow-flicker 2s infinite alternate;
         }
 
+        /* 🌟 大卡通奖杯样式与动画 - 🚀 修正：添加 margin-bottom 让奖杯与下方文字拉开美观间距 */
         .cartoon-trophy {
             width: 70px;  
             height: 70px;
             filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.8));
             animation: trophy-bounce 1.5s infinite alternate ease-in-out;
             flex-shrink: 0;
+            margin-bottom: 10px;
         }
 
         h1 { 
@@ -121,11 +125,11 @@
             font-family: "Microsoft YaHei", sans-serif;
             font-size: 3.5rem;
             font-weight: 900;
-            color: #39ff14; /* 荧光毒液绿 */
+            color: #39ff14; 
             text-shadow: 0 0 20px rgba(57, 255, 20, 0.8), 0 0 40px rgba(57, 255, 20, 0.5);
             animation: winner-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.5) forwards, winner-shaking 0.05s infinite;
             animation-duration: 0.4s, 3s; 
-            animation-iteration-count: 1, 60; /* 0.05s * 60 = 3秒 */
+            animation-iteration-count: 1, 60; 
             animation-fill-mode: forwards;
             position: relative;
             z-index: 1010;
@@ -292,7 +296,6 @@
         @keyframes popIn { 0% { transform: scale(0.85); } 100% { transform: scale(1.05); } }
         @keyframes shake { 0% { transform: translate(0, 0); } 50% { transform: translate(-1px, 1px); } 100% { transform: translate(1px, -1px); } }
         
-        /* 🚀 绝杀核心动画：从中心蹦出 + 狂暴颤抖 */
         @keyframes winner-pop { 0% { transform: scale(0.1); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         @keyframes winner-shaking { 
             0%, 100% { transform: scale(1) translate(0, 0) rotate(0deg); } 
@@ -301,12 +304,10 @@
             60% { transform: scale(1) translate(-3px, -2px) rotate(-1deg); }
             80% { transform: scale(1) translate(3px, 3px) rotate(1deg); }
         }
-        /* 🚀 随机点将名称呼吸闪烁动画 */
         @keyframes lucky-glow {
             0% { filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); }
             100% { filter: drop-shadow(0 0 25px rgba(255, 215, 0, 1)); }
         }
-        /* 🚀 烟雾爆破消散 */
         @keyframes smoke-burst-disperse {
             0% { box-shadow: 0 0 10px 10px rgba(255,0,127,0.9), 0 0 10px 10px rgba(0,240,255,0.9); opacity: 1; }
             100% { box-shadow: 0 0 18px 120px rgba(255,0,127,0), 0 0 250px 160px rgba(0,240,255,0); transform: translate(-50%, -50%) scale(4.5); opacity: 0; }
@@ -317,7 +318,7 @@
 <body>
 
     <div id="countdownOverlay" class="hidden">
-        <div id="countdownTips">🏆 大力神杯 🏆</div>
+        <div id="countdownTips">🏆 大力神杯系列赛 🏆</div>
         <div id="countdownNumber">3</div>
     </div>
 
@@ -337,12 +338,12 @@
             <div class="top-event-title">MCE 大力神杯</div>
         </div>
         
-        <h1 id="mainTitle"> SPEED ⚡ RUSH </h1>
+        <h1 id="mainTitle"> SPEED⚡RUSH </h1>
         
         <div id="resultView">🏆 加入战队，竞速抢答！ </div>
 
         <div id="loginView" class="hidden glass-panel">
-            <input type="text" id="usernameInput" placeholder="请输入您所属赛事区域（如：北一区）" autocomplete="off"><br>
+            <input type="text" id="usernameInput" placeholder="请输入您所属赛事区（如：北一区）" autocomplete="off"><br>
             <button class="action-btn" onclick="register()">锁定身份 ➡️ 入场</button>
         </div>
 
@@ -490,12 +491,9 @@
             lockPlayerButton("已有人捷足先登，蓄力下一题...");
         });
 
-        // 🚀 核心逻辑修改：主持人点击随机点将时，被点到的人名也会在全屏幕正中央大招闪现 3 秒然后隐退
         socket.on('drawResult', (luckyName) => {
-            // 更新背景公告栏文字
             document.getElementById('resultView').innerHTML = `🎯 命运钦点：【${luckyName}】 请上前回答！`;
 
-            // 触发全屏闪现特效
             const burstBox = document.getElementById('burstOverlay');
             burstBox.innerHTML = `
                 <div class="smoke-cloud"></div>
@@ -503,7 +501,6 @@
             `;
             burstBox.classList.remove('hidden');
 
-            // 严格设定为 3 秒后自动隐退消失
             setTimeout(() => {
                 burstBox.classList.add('hidden');
             }, 3000);
