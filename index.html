@@ -8,9 +8,6 @@
     <script src="/socket.io/socket.io.js"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Keep+Together&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap'); /* 备用泼墨草书字库 */
-
         /* 🎨 全局赛博朋克电竞风 */
         :root {
             --bg-color: #0a0a16;
@@ -38,25 +35,24 @@
 
         .container { max-width: 800px; margin: 0 auto; width: 100%; position: relative; z-index: 2; }
         
-        /* 🏆 顶部超大字号国潮书法标题（参照图片泼墨风格） */
+        /* 🏆 魏碑体纯白超粗大标题定制 */
         .top-event-title {
-            /* 采用泼墨草书字库，若未加载完成则用苍劲行楷备用 */
-            font-family: 'Ma Shan Zheng', 'Keep Together', 'Kaiti', 'SimSun', serif; 
-            font-size: 2.8rem; /* 🚀 字号放大，显著大于 SPEED RUSH */
-            font-weight: normal;
-            letter-spacing: 1px;
-            background: linear-gradient(135deg, #ffffff 20%, var(--primary-color) 70%, var(--secondary-color) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            /* 优先调用华文魏碑、方正魏碑，并用硬朗的新魏体和宋体做后备 */
+            font-family: "STWeiBei", "FZWeiBei", "SimHei", "STHeiti", "新魏体", "魏碑", serif;
+            font-size: 2.8rem; 
+            font-weight: 900; /* 🚀 极致加粗 */
+            color: #ffffff;   /* 🚀 纯白色 */
+            letter-spacing: 2px;
             margin: 0;
             padding: 0 10px;
-            line-height: 1.1;
-            /* 泼墨厚重感滤镜叠加 */
-            filter: drop-shadow(0 4px 15px rgba(255,0,127,0.5)) contrast(1.2); 
+            line-height: 1.2;
+            text-transform: uppercase;
+            /* 配合纯白字体的硬朗外发光，让字形更凸显 */
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3)); 
         }
 
         h1 { 
-            font-size: 2.1rem; /* 🚀 适当缩减SPEED RUSH，凸显上方书法主题 */
+            font-size: 2.1rem; 
             font-weight: 900;
             font-family: -apple-system, sans-serif;
             text-transform: uppercase;
@@ -249,6 +245,7 @@
 
     <div class="container">
         <div class="top-event-title">MCE 大力神杯系列赛事</div>
+        
         <h1 id="mainTitle">⚡ SPEED RUSH ⚡</h1>
         
         <div id="resultView">🏆 MCE 大力神杯系列赛 - 竞速抢答 </div>
