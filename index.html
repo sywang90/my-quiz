@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>⚡ 极限手速 - 团建趣味抢答 ⚡</title>
+    <title>⚡🏆  MCE 大力神杯系列赛 - 竞速抢答 🏆⚡</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <style>
@@ -45,6 +45,19 @@
             margin-bottom: 5px;
             filter: drop-shadow(0 2px 10px rgba(255,0,127,0.3));
         }
+
+        /* 📍 副标题：请参赛者们入场签到 */
+        .sub-title {
+            font-size: 1.2rem;
+            color: var(--cyan-glow);
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-top: 5px;
+            margin-bottom: 25px;
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+            animation: pulse-text 2s infinite;
+        }
+
 
         /* 🏆 结果公告栏优化 */
         #resultView { 
@@ -194,33 +207,33 @@
 
     <div class="container">
         <h1 id="mainTitle">⚡ SPEED RUSH ⚡</h1>
-        <div id="resultView">🏆 欢迎来到王牌抢答战场</div>
+        <div id="resultView">🏆 大力神杯系列赛 - 预备 </div>
 
         <div id="loginView" class="hidden class-panel">
             <h2 style="color: var(--secondary-color); font-size: 1.5rem; margin-top: 0;">加入这场博弈</h2>
             <p style="color: #aaa; margin-bottom: 25px;">请输入您的专属代号：</p>
-            <input type="text" id="usernameInput" placeholder="例如：张三 - 运营部" autocomplete="off"><br>
-            <button class="action-btn" onclick="register()">锁定身份 ➡️ 进场</button>
+            <input type="text" id="usernameInput" placeholder="例如：北一区" autocomplete="off"><br>
+            <button class="action-btn" onclick="register()">锁定身份 ➡️ 入场</button>
         </div>
 
         <div id="playerView" class="hidden">
             <p style="font-size: 1.1rem; color: #aaa; margin: 5px 0;">当前身份：<span id="myTitle" style="color:var(--secondary-color); font-weight: 900;"></span></p>
-            <div id="statusText" class="status-lock">🔒 主持人正在蓄力题目...</div>
+            <div id="statusText" class="status-lock">🔒 请听主持人宣读题目...</div>
             <button id="rushButton" disabled onclick="pressButton()">HOLD</button>
         </div>
 
         <div id="adminView" class="dashboard hidden">
             <div class="panel">
-                <h3 style="color: var(--secondary-color); margin-top: 0; font-size: 1.2rem;">📢 全员集结二维码</h3>
+                <h3 style="color: var(--secondary-color); margin-top: 0; font-size: 1.2rem;">📢 赛事集结专属二维码</h3>
                 <div id="qrcode"></div>
-                <h4 style="margin-top: 20px; margin-bottom: 10px; color: #aaa;">已链入特工 (<span id="userCount" style="color:var(--primary-color); font-weight: bold;">0</span> 人)：</h4>
+                <h4 style="margin-top: 20px; margin-bottom: 10px; color: #aaa;">已就位选手 (<span id="userCount" style="color:var(--primary-color); font-weight: bold;">0</span> 人)：</h4>
                 <div class="user-list" id="userList"></div>
             </div>
             
             <div class="panel" style="display: flex; flex-direction: column; justify-content: center;">
-                <h3 style="color: var(--primary-color); margin-top: 0; font-size: 1.2rem;">⚙️ 指挥中枢</h3>
-                <button id="adminStartBtn" class="action-btn admin-action-btn" onclick="startQuiz()" style="background: linear-gradient(135deg, #39ff14 0%, #00aa00 100%); box-shadow: 0 4px 20px rgba(57,255,20,0.3); font-size: 1.3rem;">🔥 开启 3 秒盲盒抢答</button>
-                <button class="action-btn admin-action-btn" onclick="luckyDraw()">🎯 呼叫幸运制裁（随机抽一人）</button>
+                <h3 style="color: var(--primary-color); margin-top: 0; font-size: 1.2rem;">⚙️ MCE 中央赛事控制台</h3>
+                <button id="adminStartBtn" class="action-btn admin-action-btn" onclick="startQuiz()" style="background: linear-gradient(135deg, #39ff14 0%, #00aa00 100%); box-shadow: 0 4px 20px rgba(57,255,20,0.3); font-size: 1.3rem;">🔥 启动极速抢答（3秒倒计）</button>
+                <button class="action-btn admin-action-btn" onclick="luckyDraw()">🎯 随机点将回答 </button>
                 <p style="color: #666; font-size: 0.85rem; margin-top: 15px; line-height: 1.5; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
                     💡 <b>完美控场流程：</b><br>
                     当您点按【开启】后，所有人的手机会立刻强制黑屏并闪烁 3, 2, 1！数到 0 的瞬间，员工手机按钮会自动“炸裂变红并疯狂抖动”，最完美的公平对决！
@@ -241,7 +254,7 @@
 
             if (isClientAdmin) {
                 document.getElementById('adminView').classList.remove('hidden');
-                document.getElementById('mainTitle').innerText = "💻 CONTROL PANEL (指挥大屏)";
+                document.getElementById('mainTitle').innerText = "💻 MCE CONTROL PANEL (中枢大屏)";
                 
                 let staffUrl = window.location.origin + window.location.pathname;
                 new QRCode(document.getElementById("qrcode"), {
@@ -260,7 +273,7 @@
 
         function register() {
             const name = document.getElementById('usernameInput').value.trim();
-            if(!name) return alert('请输入您的代号哦！');
+            if(!name) return alert('请输入您所属参赛区域哦！');
             myName = name;
             socket.emit('register', name);
         }
@@ -283,7 +296,7 @@
 
         socket.on('quizStarted', () => {
             runCountdown(3, () => {
-                document.getElementById('resultView').innerText = "⚡️ GO！全员疯狂轰炸！ ⚡️";
+                document.getElementById('resultView').innerText = "⚡️ GO！向大力神杯冲刺！  ⚡️";
                 
                 const btn = document.getElementById('rushButton');
                 const status = document.getElementById('statusText');
@@ -292,7 +305,7 @@
                     btn.innerText = "RUSH!";
                     btn.classList.add('active');
                     status.className = "status-go";
-                    status.innerText = "🔥 战道已开！疯狂按压！！";
+                    status.innerText = "🔥 战道已开！速拍金键！！";
                 }
             });
         });
@@ -334,11 +347,11 @@
             if(document.getElementById('adminStartBtn')) document.getElementById('adminStartBtn').disabled = false;
 
             document.getElementById('resultView').innerText = `🎉 绝杀出炉：【${winnerName}】 夺得头筹！`;
-            lockPlayerButton("名额被爆，蓄力下一题...");
+            lockPlayerButton("已有人捷足先登，蓄力下一题...");
         });
 
         socket.on('drawResult', (luckyName) => {
-            document.getElementById('resultView').innerText = `🎯 命运召唤：【${luckyName}】 被强制选中！`;
+            document.getElementById('resultView').innerText = `🎯 命运钦点：【${luckyName}】 请上前回答！`;
         });
 
         socket.on('invalidPress', () => {
