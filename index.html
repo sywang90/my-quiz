@@ -8,28 +8,25 @@
     <script src="/socket.io/socket.io.js"></script>
     
     <style>
-        /* 🎨 全局赛博朋克电竞风与运动主题结合 */
+        /* 🎨 全局赛博朋克电竞风与深宝蓝运动主题 */
         :root {
-            --bg-color: #0a0a16;
+            --bg-color: #020813;
+            --roche-dark-blue: #0a1128;   /* 🚀 偏深的宝蓝色 */
+            --roche-bright-blue: #001f3f; /* 🚀 宝蓝高光色 */
             --primary-color: #ff007f;
             --secondary-color: #00f0ff;
             --success-color: #39ff14;
             --warning-color: #ffaa00;
-            --panel-bg: rgba(20, 20, 45, 0.7);
-            --gold-color: #FFD700; /* 金黄色 */
+            --panel-bg: rgba(10, 25, 50, 0.75);
+            --gold-color: #FFD700; 
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
             font-family: "Microsoft YaHei", "微软雅黑", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            /* 🍀 世界杯草坪背景 */
-            background-image: 
-                radial-gradient(circle at center, rgba(27, 17, 58, 0.5) 0%, rgba(10, 10, 22, 0.8) 100%),
-                repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(255, 255, 255, 0.03) 50px, rgba(255, 255, 255, 0.03) 100px),
-                repeating-linear-gradient(90deg, #1e5631 0px, #1e5631 2px, #2d814c 2px, #2d814c 100px); 
-            background-blend-mode: overlay, normal, normal;
+            /* 🚀 修正：背景调整为深宝蓝色电竞质感 */
+            background: radial-gradient(circle at center, var(--roche-bright-blue) 0%, var(--roche-dark-blue) 60%, var(--bg-color) 100%);
             background-attachment: fixed;
             color: #fff; 
             text-align: center; 
@@ -39,11 +36,11 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            overflow-x: hidden;
         }
 
         .container { max-width: 800px; margin: 0 auto; width: 100%; position: relative; z-index: 2; }
         
-        /* 🏆 标题包裹层（调整布局，使文字和左侧奖杯完美水平对齐居中） */
         .header-wrap {
             display: inline-flex;
             align-items: center;
@@ -51,7 +48,6 @@
             margin: 0 auto;
         }
 
-        /* 🏆 微软雅黑、加粗、金黄色、荧光闪动标题 - 🚀 修正：文字改为“大力神杯赛事” */
         .top-event-title {
             font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
             font-size: 2.8rem; 
@@ -65,7 +61,6 @@
             animation: gold-glow-flicker 2s infinite alternate;
         }
 
-        /* 🌟 大卡通奖杯样式与动画 */
         .cartoon-trophy {
             width: 70px;  
             height: 70px;
@@ -88,17 +83,6 @@
             animation: neon-flicker 2s infinite alternate;
         }
 
-        /* 📍 副标题 */
-        .sub-title {
-            font-size: 1.2rem;
-            color: var(--cyan-glow);
-            font-weight: bold;
-            letter-spacing: 2px;
-            margin-top: 5px;
-            margin-bottom: 25px;
-            text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
-        }
-
         /* 🏆 结果公告栏优化 */
         #resultView { 
             font-size: 1.5rem; 
@@ -106,24 +90,25 @@
             font-weight: bold; 
             margin: 15px auto; 
             padding: 12px 20px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 240, 255, 0.1);
             border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.3);
             min-height: 55px; 
             display: flex;
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 20px rgba(0, 240, 255, 0.2);
+            position: relative;
         }
 
-        /* 📱 员工端：签到输入框与按钮 */
+        /* 📱 员工端：签到面板 */
         .glass-panel {
             background: var(--panel-bg);
-            border: 1px solid rgba(0, 240, 255, 0.2);
+            border: 1px solid rgba(0, 240, 255, 0.3);
             border-radius: 24px;
             padding: 35px 25px;
-            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.15);
             backdrop-filter: blur(20px);
         }
 
@@ -131,11 +116,11 @@
             padding: 16px 20px; 
             font-size: 1.1rem; 
             border-radius: 16px; 
-            border: 2px solid rgba(255, 255, 255, 0.1); 
+            border: 2px solid rgba(0, 240, 255, 0.3); 
             width: 100%; 
             max-width: 320px; 
             text-align: center; 
-            background: rgba(0, 0, 0, 0.4); 
+            background: rgba(0, 5, 15, 0.6); 
             color: #fff; 
             outline: none; 
             transition: 0.3s;
@@ -143,7 +128,7 @@
         }
         input:focus { 
             border-color: var(--secondary-color); 
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
         }
 
         .action-btn { 
@@ -160,9 +145,7 @@
             width: 100%;
             max-width: 320px;
         }
-        .action-btn:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(255, 0, 127, 0.2); }
 
-        /* 🚨 员工端：状态提示条 */
         #statusText { 
             font-size: 1.1rem; 
             font-weight: bold; 
@@ -186,14 +169,14 @@
                 radial-gradient(circle at center, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.5) 100%),
                 repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 2px, transparent 2px, transparent 40px),
                 repeating-linear-gradient(-45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 2px, transparent 2px, transparent 40px),
-                #1a1a2e;
-            color: #444455; 
-            box-shadow: 0 12px 0 #080812, inset 0 6px 15px rgba(255,255,255,0.1), 0 15px 25px rgba(0,0,0,0.6); 
+                #111e38;
+            color: #445577; 
+            box-shadow: 0 12px 0 #030814, inset 0 6px 15px rgba(255,255,255,0.1), 0 15px 25px rgba(0,0,0,0.6); 
             margin: 30px auto; 
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 8px solid #28283d; 
+            border: 8px solid #1a2a4a; 
             transition: all 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
             cursor: not-allowed;
             position: relative;
@@ -221,46 +204,77 @@
         /* ⏳ 综艺感3秒倒计时遮罩层 */
         #countdownOverlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 15, 35, 0.97); 
+            background: rgba(3, 8, 20, 0.98); 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
             z-index: 999; 
         }
+        /* 🚀 修正：抢按键倒计时使用极具视觉冲击力的红字 */
         #countdownNumber { 
-            font-size: 13rem; font-weight: 900; color: var(--secondary-color); 
-            text-shadow: 0 0 50px rgba(0, 240, 255, 0.8); 
+            font-size: 15rem; font-weight: 900; 
+            color: #ff003c; /* 纯正爆燃红 */
+            text-shadow: 0 0 40px rgba(255, 0, 60, 0.6), 0 0 80px rgba(255, 0, 60, 0.4); 
             animation: popIn 0.5s ease-out infinite alternate; 
         }
         #countdownTips { font-size: 2rem; color: var(--gold-color); font-weight: bold; margin-bottom: 20px; letter-spacing: 4px; text-shadow: 0 0 12px rgba(255,215,0,0.4); }
 
-        /* 💻 控制台控制台样式 */
+        /* 🚀 绝杀震撼出场：第一个抢到的人的震动名称样式 */
+        .burst-winner {
+            display: inline-block;
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #39ff14; /* 荧光毒液绿 */
+            text-shadow: 0 0 20px rgba(57, 255, 20, 0.8), 0 0 40px rgba(57, 255, 20, 0.4);
+            animation: winner-shaking 0.05s infinite, winner-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.5) forwards;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 🚀 绝杀爆裂粒子：纯CSS烟雾消散云效果 */
+        .smoke-cloud {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px; height: 10px;
+            background: transparent;
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 
+                0 0 60px 30px rgba(255, 0, 127, 0.7), 
+                0 0 100px 60px rgba(0, 240, 255, 0.5), 
+                -40px -30px 80px 40px rgba(57, 255, 20, 0.6),
+                40px 30px 80px 40px rgba(255, 215, 0, 0.6);
+            animation: smoke-burst-disperse 0.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+            z-index: 5;
+        }
+
+        /* 💻 控制台中控台样式 */
         .dashboard { display: flex; justify-content: space-around; align-items: flex-start; margin-top: 10px; flex-wrap: wrap; gap: 20px; text-align: left; }
-        .panel { background: var(--panel-bg); padding: 25px; border-radius: 20px; border: 1px solid rgba(0, 102, 204, 0.3); flex: 1; min-width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .panel { background: var(--panel-bg); padding: 25px; border-radius: 20px; border: 1px solid rgba(0, 240, 255, 0.2); flex: 1; min-width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         #qrcode { background: white; padding: 12px; display: inline-block; border-radius: 12px; margin-top: 10px; box-shadow: 0 0 20px rgba(255,255,255,0.1); }
         .user-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; max-height: 250px; overflow-y: auto; padding-right: 5px; }
-        .user-badge { background: rgba(0, 102, 204, 0.15); padding: 8px 16px; border-radius: 30px; border: 1px solid var(--secondary-color); font-size: 0.95rem; display: flex; align-items: center; }
+        .user-badge { background: rgba(0, 240, 255, 0.08); padding: 8px 16px; border-radius: 30px; border: 1px solid var(--secondary-color); font-size: 0.95rem; display: flex; align-items: center; }
         .admin-action-btn { background: linear-gradient(135deg, #00FF66 0%, #009933 100%); width: auto; max-width: none; border: none; font-size: 1.2rem; color: #001122; box-shadow: 0 4px 20px rgba(0,255,100,0.3); margin-bottom: 15px; }
 
-        /* 🎬 特效动画 */
+        /* 🎬 全套特效动画 */
         @keyframes gold-glow-flicker {
             0%, 100% { text-shadow: 0 0 12px rgba(255, 215, 0, 0.7), 0 0 24px rgba(255, 215, 0, 0.4); opacity: 1; }
             50% { text-shadow: 0 0 18px rgba(255, 215, 0, 0.9), 0 0 35px rgba(255, 215, 0, 0.6); opacity: 0.95; }
         }
-        @keyframes trophy-bounce {
-            0% { transform: translateY(0) scale(1); }
-            100% { transform: translateY(-8px) scale(1.05); }
-        }
-        @keyframes neon-flicker {
-            0%, 100% { filter: drop-shadow(0 2px 12px rgba(255,0,127,0.5)); opacity: 1; }
-            95% { filter: drop-shadow(0 2px 12px rgba(255,0,127,0.5)); opacity: 1; }
-            96% { opacity: 0.85; filter: drop-shadow(0 2px 4px rgba(255,0,127,0.2)); }
-            97% { opacity: 1; }
-            98% { opacity: 0.9; }
-            99% { opacity: 1; }
-        }
+        @keyframes trophy-bounce { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-8px) scale(1.05); } }
+        @keyframes neon-flicker { 0%, 100% { filter: drop-shadow(0 2px 12px rgba(255,0,127,0.5)); opacity: 1; } 95% { filter: drop-shadow(0 2px 12px rgba(255,0,127,0.5)); opacity: 1; } }
         @keyframes pulse { 0% { box-shadow: 0 12px 0 #5a001e, 0 0 30px rgba(255, 42, 109, 0.5); } 100% { box-shadow: 0 12px 0 #5a001e, 0 0 60px rgba(255, 42, 109, 0.9); } }
         @keyframes breath { 0% { opacity: 0.6; } 100% { opacity: 1; } }
-        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(1.1); opacity: 1; } }
+        @keyframes popIn { 0% { transform: scale(0.85); } 100% { transform: scale(1.05); } }
         @keyframes shake { 0% { transform: translate(0, 0); } 50% { transform: translate(-1px, 1px); } 100% { transform: translate(1px, -1px); } }
+        
+        /* 🚀 绝杀震动与烟雾消散核心动画 */
+        @keyframes winner-pop { 0% { transform: scale(0.3); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes winner-shaking { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 25% { transform: translate(-2px, 2px) rotate(-1deg); } 75% { transform: translate(2px, -2px) rotate(1deg); } }
+        @keyframes smoke-burst-disperse {
+            0% { box-shadow: 0 0 10px 10px rgba(255,0,127,0.8), 0 0 10px 10px rgba(0,240,255,0.8); opacity: 1; }
+            100% { box-shadow: 0 0 140px 90px rgba(255,0,127,0.0), 0 0 200px 120px rgba(0,240,255,0.0); transform: translate(-50%, -50%) scale(4); opacity: 0; }
+        }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -289,7 +303,7 @@
         
         <div id="resultView">🏆 加入战队，竞速抢答！ </div>
 
-        <div id="loginView" class="hidden glass-panel">
+        <div id="loginView" class="hidden class-panel">
             <input type="text" id="usernameInput" placeholder="请输入您所属赛事区域（如：北一区）" autocomplete="off"><br>
             <button class="action-btn" onclick="register()">锁定身份 ➡️ 入场</button>
         </div>
@@ -334,7 +348,6 @@
                 document.getElementById('adminView').classList.remove('hidden');
                 document.getElementById('mainTitle').innerText = "SPEED RUSH";
                 document.querySelector('.top-event-title').innerText = "💻 MCE COMMAND PANEL";
-                // 管理员页面隐藏卡通奖杯，保持紧凑排版
                 if(document.querySelector('.cartoon-trophy')) document.querySelector('.cartoon-trophy').style.display = 'none';
                 
                 let staffUrl = window.location.origin + window.location.pathname;
@@ -371,15 +384,15 @@
             const countEl = document.getElementById('userCount');
             if(countEl) countEl.innerText = list.length;
             const container = document.getElementById('userList');
-            if(container) container.innerHTML = list.map(user => `<div class="user-badge">🔬 ${user}</div>`).join('');
+            if(container) container.innerHTML = list.map(user => `<div class="user-badge">⚡ ${user}</div>`).join('');
         });
 
-        function startQuiz() { startQuiz(); }
-        function luckyDraw() { luckyDraw(); }
+        function startQuiz() { socket.emit('startQuiz'); }
+        function luckyDraw() { socket.emit('luckyDraw'); }
 
         socket.on('quizStarted', () => {
             runCountdown(3, () => {
-                document.getElementById('resultView').innerText = "⚡️ GO！向大力神杯冲刺！  ⚡️";
+                document.getElementById('resultView').innerHTML = "⚡️ GO！向大力神杯冲刺！  ⚡️";
                 
                 const btn = document.getElementById('rushButton');
                 const status = document.getElementById('statusText');
@@ -388,7 +401,7 @@
                     btn.innerText = "RUSH!";
                     btn.classList.add('active');
                     status.className = "status-go";
-                    status.innerText = "🔥 大杯已开！速拍金键！！";
+                    status.innerText = "🔥 战道已开！速拍金键！！";
                 }
             });
         });
@@ -403,7 +416,6 @@
             
             let current = seconds;
             numEl.innerText = current;
-            numEl.style.color = "var(--secondary-color)";
             
             clearInterval(countdownTimer);
             countdownTimer = setInterval(() => {
@@ -412,7 +424,6 @@
                     numEl.innerText = current;
                 } else if (current === 0) {
                     numEl.innerText = "GO!";
-                    numEl.style.color = "var(--gold-color)";
                 } else {
                     clearInterval(countdownTimer);
                     overlay.classList.add('hidden'); 
@@ -422,17 +433,24 @@
             }, 1000);
         }
 
+        // 🚀 核心修改：接收到赢家时触发“大字体震动” + “烟雾爆破消散”特效
         socket.on('quizEnd', (winnerName) => {
             clearInterval(countdownTimer); 
             document.getElementById('countdownOverlay').classList.add('hidden');
             if(document.getElementById('adminStartBtn')) document.getElementById('adminStartBtn').disabled = false;
 
-            document.getElementById('resultView').innerText = `🏆 本题得得主：【${winnerName}】 成功捧杯！`;
+            // 注入绝杀动画骨架：外层粒子爆开，名字高频震动
+            const resultBox = document.getElementById('resultView');
+            resultBox.innerHTML = `
+                <div class="smoke-cloud"></div>
+                <div class="burst-winner">🏆 绝杀：【${winnerName}】 夺得头筹！</div>
+            `;
+            
             lockPlayerButton("已有人捷足先登，蓄力下一题...");
         });
 
         socket.on('drawResult', (luckyName) => {
-            document.getElementById('resultView').innerText = `🎯 命运钦点：【${luckyName}】 请上前回答！`;
+            document.getElementById('resultView').innerHTML = `🎯 命运钦点：【${luckyName}】 请上前回答！`;
         });
 
         socket.on('invalidPress', () => {
