@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>团建狂欢 - 实时互动</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #1a1a2e; color: #fff; text-align: center; margin: 0; padding: 20px; overflow-x: hidden; }
+        .container { max-width: 900px; margin: 0 auto; position: relative; }
+        h1 { color: #e94560; font-size: 2.5rem; margin-bottom: 5px; }
+        button { background: #e94560; color: white; border: none; padding: 15px 30px; font-size: 1.2rem; border-radius: 30px; cursor: pointer; margin: 10px; transition: 0.2s; box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4); }
+        button:hover { background: #ff6b81; transform: scale(1.05); }
+        button:disabled { background: #444 !important; color: #888 !important; box-shadow: none !important; cursor: not-allowed; }
+        .hidden { display: none !important; }
+        
+        /* 员工端：抢答巨无霸大按钮 */
+        #rushButton { width: 260px; height: 260px; border-radius: 50%; font-size: 2.2rem; background: #222; color: #555; box-shadow: inset 0 0 20px rgba(0,0,0,0.6); margin: 40px auto; display: block; border: 5px solid #333; transition: all 0.2s; }
+        #rushButton.active { background: #e94560; color: white; animation: pulse 0.8s infinite; box-shadow: 0 0 30px rgba(233, 69, 96, 0.8); border: 5px solid #ff6b81; cursor: pointer; }
+        
+        /* 全局倒计时遮罩层（3秒极速版） */
+        #countdownOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(26, 26, 46, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 999; }
+        #countdownNumber { font-size: 12rem; font-weight: bold; color: #e94560; text-shadow: 0 0 40px rgba(233, 69, 96, 0.7); animation: zoomIn 0.4s ease-out infinite alternate; }
+        #countdownTips { font-size: 2.2rem; color: #f5b041; margin-bottom: 20px; letter-spacing: 4px; font-weight: bold; }
+
+        /* 大屏端布局 */
+        .dashboard { display: flex; justify-content: space-around; align-items: flex-start; margin-top: 20px; flex-wrap: wrap; gap: 20px; }
+        .panel { background: #16213e; padding: 20px; border-radius: 15px; border: 1px solid #0f3460; flex: 1; min-width: 280px; }
+        #qrcode { background: white; padding: 15px; display: inline-block; border-radius: 10px; margin-top: 10px; }
+        .user-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 15px; max-height: 200px; overflow-y: auto; }
+        .user-badge { background: #1a1a2e; padding: 8px 15px; border-radius: 20px; border: 1px solid #e94560; font-size: 0.9rem; }
+        
+        #resultView { font-size: 2.2rem; color: #4ecc71; font-weight: bold; margin: 20px 0; min-height: 60px; text-shadow: 0 0 10px rgba(78,204,113,0.3); }
+        input { padding: 15px; font-size: 1.2rem; border-radius: 30px; border: 2px solid #0f3460; width: 80%; max-width: 300px; text-align: center; background: #16213e; color: white; outline: none; }
+        input:focus { border-color: #e94560; }
+        
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.04); } 100% { transform: scale(1); } }
+        @keyframes zoomIn { 0% { transform: scale(0.8); opacity: 0.6; } 100% { transform: scale(1.2); opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div id="countdownOverlay" class="hidden">
+        <div id="countdownTips">⚡️ 全员准备！手速预备！ ⚡️</div>
+        <div id="countdownNumber">3</div>
+    </div>
+
+    <div class="container">
+        <h1 id="mainTitle">🎪 团建互动大玩家</h1>
+        <div id="resultView">🎉 欢迎进入趣味抢答赛！</div>
+
+        <div id="loginView" class="hidden">
+            <h2 style="color: #f5b041;">第一步：请签到进场</h2>
+            <p>请输入您的名字参加游戏：</p>
+            <input type="text" id="usernameInput" placeholder="例如：张三-市场部"><br><br>
+            <button onclick="register()">提交签到 ➡️ 准备抢答</button>
+        </div>
+
+        <div id="playerView" class="hidden">
+            <p>您好：<span id="myTitle" style="color:#e94560; font-weight: bold;"></span></p>
+            <p id="statusText" style="color: #f5b041; font-size: 1.2rem; font-weight: bold; background: rgba(245,176,65,0.1); padding: 10px; border-radius: 10px;">🔒 抢答尚未开启，请听主持人读题...</p>
+            <button id="rushButton" disabled onclick="pressButton()">🔒 锁死中</button>
+        </div>
+
+        <div id="adminView" class="dashboard hidden">
+            <div class="panel">
+                <h3>📱 员工扫码签到二维码</h3>
+                <div id="qrcode"></div>
+                <h4 style="margin-top: 15px; margin-bottom: 5px;">已签到人员 (<span id="userCount" style="color:#e94560;">0</span> 人)：</h4>
+                <div class="user-list" id="userList"></div>
+            </div>
+            
+            <div class="panel" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <h3>⚙️ 主持人控制中心</h3>
+                <button id="adminStartBtn" onclick="startQuiz()" style="font-size: 1.5rem; padding: 20px 40px; background: #4ecc71;">📢 读完题：开启抢答！</button>
+                <button onclick="luckyDraw()" style="background:#0f3460; margin-top: 20px;">🎯 没人知道？随机抽一人</button>
+                <p style="color: #888; font-size: 0.9rem; margin-top: 30px; text-align: left; line-height: 1.6;">
+                    💡 **极速3秒控场流程：**<br>
+                    1. 读完题目后，点击【开启抢答】。<br>
+                    2. **所有人屏幕无延迟同步进入 3 秒倒计时**。<br>
+                    3. 闪现 3, 2, 1, GO! 后瞬间激活动作，手慢无！
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        let myName = "";
+        let isClientAdmin = false;
+        let countdownTimer = null;
+
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            isClientAdmin = urlParams.get('role') === 'admin';
+
+            if (isClientAdmin) {
+                document.getElementById('adminView').classList.remove('hidden');
+                document.getElementById('mainTitle').innerText = "💻 团建互动作战大屏 (控制台)";
+                
+                let staffUrl = window.location.origin + window.location.pathname;
+                new QRCode(document.getElementById("qrcode"), {
+                    text: staffUrl,
+                    width: 180,
+                    height: 180,
+                    colorDark : "#000000",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
+            } else {
+                document.getElementById('loginView').classList.remove('hidden');
+                document.getElementById('adminView').remove(); 
+            }
+        };
+
+        function register() {
+            const name = document.getElementById('usernameInput').value.trim();
+            if(!name) return alert('请输入名字哦！');
+            myName = name;
+            socket.emit('register', name);
+        }
+
+        socket.on('registered', (name) => {
+            document.getElementById('loginView').classList.add('hidden');
+            document.getElementById('playerView').classList.remove('hidden');
+            document.getElementById('myTitle').innerText = name;
+        });
+
+        socket.on('updateUserList', (list) => {
+            const countEl = document.getElementById('userCount');
+            if(countEl) countEl.innerText = list.length;
+            const container = document.getElementById('userList');
+            if(container) container.innerHTML = list.map(user => `<div class="user-badge">👤 ${user}</div>`).join('');
+        });
+
+        function startQuiz() { 
+            socket.emit('startQuiz'); 
+        }
+        function luckyDraw() { socket.emit('luckyDraw'); }
+
+        socket.on('quizStarted', () => {
+            // 📢 【核心修改】这里的参数从 10 改成了 3
+            runCountdown(3, () => {
+                document.getElementById('resultView').innerText = "⚡️ GO！全员拼手速！ ⚡️";
+                document.getElementById('resultView').style.color = "#f5b041";
+                
+                const btn = document.getElementById('rushButton');
+                const status = document.getElementById('statusText');
+                if(btn && !isClientAdmin) {
+                    btn.disabled = false;
+                    btn.innerText = "⚡️ 马上抢！";
+                    btn.classList.add('active');
+                    status.innerText = "🔥 抢答进行中！快拍按钮！";
+                    status.style.color = "#4ecc71";
+                    status.style.background = "rgba(78,204,113,0.1)";
+                }
+            });
+        });
+
+        function runCountdown(seconds, callback) {
+            const overlay = document.getElementById('countdownOverlay');
+            const numEl = document.getElementById('countdownNumber');
+            const adminBtn = document.getElementById('adminStartBtn');
+            
+            if(adminBtn) adminBtn.disabled = true; 
+            overlay.classList.remove('hidden'); 
+            
+            let current = seconds;
+            numEl.innerText = current;
+            
+            clearInterval(countdownTimer);
+            countdownTimer = setInterval(() => {
+                current--;
+                if (current > 0) {
+                    numEl.innerText = current;
+                } else if (current === 0) {
+                    numEl.innerText = "GO!";
+                    numEl.style.color = "#4ecc71";
+                } else {
+                    clearInterval(countdownTimer);
+                    overlay.classList.add('hidden'); 
+                    numEl.style.color = "#e94560";  
+                    if(adminBtn) adminBtn.disabled = false; 
+                    callback(); 
+                }
+            }, 1000);
+        }
+
+        function pressButton() {
+            socket.emit('pressButton');
+        }
+
+        socket.on('quizEnd', (winnerName) => {
+            clearInterval(countdownTimer); 
+            document.getElementById('countdownOverlay').classList.add('hidden');
+            if(document.getElementById('adminStartBtn')) document.getElementById('adminStartBtn').disabled = false;
+
+            document.getElementById('resultView').innerText = `🎉 恭喜 【${winnerName}】 成功抢到答题权！`;
+            document.getElementById('resultView').style.color = "#4ecc71";
+            lockPlayerButton("名额已被抢走，等待下一题~");
+        });
+
+        socket.on('drawResult', (luckyName) => {
+            document.getElementById('resultView').innerText = `🎯 命运之子：【${luckyName}】 被抽中回答！`;
+            document.getElementById('resultView').style.color = "#4ecc71";
+        });
+
+        socket.on('invalidPress', () => {
+            lockPlayerButton("抢答无效！请等待主持人发令！");
+        });
+
+        function lockPlayerButton(msg) {
+            const btn = document.getElementById('rushButton');
+            const status = document.getElementById('statusText');
+            if(btn) {
+                btn.disabled = true;
+                btn.innerText = "🔒 锁死中";
+                btn.classList.remove('active');
+                status.innerText = "🔒 " + msg;
+                status.style.color = "#888";
+                status.style.background = "none";
+            }
+        }
+    </script>
+</body>
+</html>
