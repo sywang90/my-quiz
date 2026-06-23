@@ -2,8 +2,14 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
+const path = require('path'); // 新增
 
 app.use(express.static(__dirname));
+
+// 📢 核心修复：强行让根目录返回 index.html 网页
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 let users = new Map(); 
 let quizStarted = false;
@@ -38,7 +44,7 @@ io.on('connection', (socket) => {
     socket.on('luckyDraw', () => {
         if (users.size === 0) return;
         const userArray = Array.from(users.values());
-        const luckyName = userArray[Math.floor(Math.random() * userArray.size)];
+        const luckyName = userArray[Math.floor(Math.random() * userArray.length)];
         io.emit('drawResult', luckyName);
     });
 
@@ -50,8 +56,6 @@ io.on('connection', (socket) => {
     });
 });
 
-// 📢 【超级重要：云端自适应端口修改】
-// 如果云端有分配端口就用云端的（process.env.PORT），没有就默认用本地的 3000
 const PORT = process.env.PORT || 3000;
 http.listen(PORT, () => {
     console.log(`🎉 团建安全抢答服务器已成功启动，正在监听端口: ${PORT}`);
