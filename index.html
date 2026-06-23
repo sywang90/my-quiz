@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>⚡🏆  MCE 大力神杯系列赛 - 竞速抢答 🏆⚡</title>
+    <title>⚡🏆  MCE 大力神杯系列赛 - 加入战队，竞速抢答！ 🏆⚡</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     
@@ -43,19 +43,15 @@
 
         .container { max-width: 800px; margin: 0 auto; width: 100%; position: relative; z-index: 2; }
         
-        /* 🏆 标题包裹层（用于将大奖杯和文字完美水平居中排列） */
+        /* 🏆 标题包裹层（调整布局，使文字和左侧奖杯完美水平对齐居中） */
         .header-wrap {
-            display: table;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             margin: 0 auto;
-            white-space: nowrap;
-        }
-        
-        .header-cell {
-            display: table-cell;
-            vertical-align: middle;
         }
 
-        /* 🏆 微软雅黑、加粗、金黄色、荧光闪动标题 */
+        /* 🏆 微软雅黑、加粗、金黄色、荧光闪动标题 - 🚀 修正：文字改为“大力神杯赛事” */
         .top-event-title {
             font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
             font-size: 2.8rem; 
@@ -71,10 +67,11 @@
 
         /* 🌟 大卡通奖杯样式与动画 */
         .cartoon-trophy {
-            width: 70px;  /* 🚀 足够大的奖杯尺寸 */
+            width: 70px;  
             height: 70px;
             filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.8));
             animation: trophy-bounce 1.5s infinite alternate ease-in-out;
+            flex-shrink: 0;
         }
 
         h1 { 
@@ -277,34 +274,20 @@
     <div class="container">
         
         <div class="header-wrap">
-            <div class="header-cell">
-                <svg class="cartoon-trophy" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 16C12 10 18 8 18 8V24C18 24 12 22 12 16Z" fill="#FFB300" stroke="#FFD700" stroke-width="2"/>
-                    <path d="M52 16C52 10 46 8 46 8V24C46 24 52 22 52 16Z" fill="#FFB300" stroke="#FFD700" stroke-width="2"/>
-                    <path d="M16 8C16 8 18 36 32 36C46 36 48 8 48 8H16Z" fill="#FFD700"/>
-                    <path d="M26 36H38V48H26V36Z" fill="#FFB300"/>
-                    <path d="M20 48H44V56H20V48Z" fill="#8B5A2B"/>
-                    <circle cx="32" cy="20" r="6" fill="#FFF" opacity="0.3"/>
-                </svg>
-            </div>
-            <div class="header-cell">
-                <div class="top-event-title">MCE 大力神杯系列赛事</div>
-            </div>
-            <div class="header-cell">
-                <svg class="cartoon-trophy" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 16C12 10 18 8 18 8V24C18 24 12 22 12 16Z" fill="#FFB300" stroke="#FFD700" stroke-width="2"/>
-                    <path d="M52 16C52 10 46 8 46 8V24C46 24 52 22 52 16Z" fill="#FFB300" stroke="#FFD700" stroke-width="2"/>
-                    <path d="M16 8C16 8 18 36 32 36C46 36 48 8 48 8H16Z" fill="#FFD700"/>
-                    <path d="M26 36H38V48H26V36Z" fill="#FFB300"/>
-                    <path d="M20 48H44V56H20V48Z" fill="#8B5A2B"/>
-                    <circle cx="32" cy="20" r="6" fill="#FFF" opacity="0.3"/>
-                </svg>
-            </div>
+            <svg class="cartoon-trophy" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 16C12 10 18 8 18 8V24C18 24 12 22 12 16Z" fill="#FFB300" stroke="#FFD700" stroke-width="2"/>
+                <path d="M52 16C52 10 46 8 46 8V24C46 24 52 22 52 16Z" fill="#FFB300" stroke="#FFD700" stroke-width="2"/>
+                <path d="M16 8C16 8 18 36 32 36C46 36 48 8 48 8H16Z" fill="#FFD700"/>
+                <path d="M26 36H38V48H26V36Z" fill="#FFB300"/>
+                <path d="M20 48H44V56H20V48Z" fill="#8B5A2B"/>
+                <circle cx="32" cy="20" r="6" fill="#FFF" opacity="0.3"/>
+            </svg>
+            <div class="top-event-title">大力神杯赛事</div>
         </div>
         
         <h1 id="mainTitle">⚡ SPEED RUSH ⚡</h1>
         
-        <div id="resultView">🏆 MCE 大力神杯系列赛 - 竞速抢答 </div>
+        <div id="resultView">🏆 加入战队，竞速抢答！ </div>
 
         <div id="loginView" class="hidden glass-panel">
             <input type="text" id="usernameInput" placeholder="请输入您所属赛事区域（如：北一区）" autocomplete="off"><br>
@@ -352,7 +335,7 @@
                 document.getElementById('mainTitle').innerText = "SPEED RUSH";
                 document.querySelector('.top-event-title').innerText = "💻 MCE COMMAND PANEL";
                 // 管理员页面隐藏卡通奖杯，保持紧凑排版
-                document.querySelectorAll('.cartoon-trophy').forEach(el => el.style.display = 'none');
+                if(document.querySelector('.cartoon-trophy')) document.querySelector('.cartoon-trophy').style.display = 'none';
                 
                 let staffUrl = window.location.origin + window.location.pathname;
                 new QRCode(document.getElementById("qrcode"), {
@@ -371,7 +354,7 @@
 
         function register() {
             const name = document.getElementById('usernameInput').value.trim();
-            if(!name) return alert('请输入您所属参赛区域哦！');
+            if(!name) return alert('请输入您所属赛事区域哦！');
             myName = name;
             socket.emit('register', name);
         }
@@ -391,8 +374,8 @@
             if(container) container.innerHTML = list.map(user => `<div class="user-badge">🔬 ${user}</div>`).join('');
         });
 
-        function startQuiz() { socket.emit('startQuiz'); }
-        function luckyDraw() { socket.emit('luckyDraw'); }
+        function startQuiz() { startQuiz(); }
+        function luckyDraw() { luckyDraw(); }
 
         socket.on('quizStarted', () => {
             runCountdown(3, () => {
