@@ -8,16 +8,14 @@
     <script src="/socket.io/socket.io.js"></script>
     
     <style>
-        /* 🎨 全局赛博朋克电竞风与深宝蓝运动主题 */
+        /* 🎨 全局电竞运动主题 */
         :root {
-            --bg-color: #020813;
-            --roche-dark-blue: #0a1128;   /* 🚀 偏深的宝蓝色 */
-            --roche-bright-blue: #001f3f; /* 🚀 宝蓝高光色 */
+            --bg-color: #0a2f1d;
             --primary-color: #ff007f;
             --secondary-color: #00f0ff;
             --success-color: #39ff14;
             --warning-color: #ffaa00;
-            --panel-bg: rgba(10, 25, 50, 0.75);
+            --panel-bg: rgba(10, 35, 20, 0.75);
             --gold-color: #FFD700; 
         }
 
@@ -25,8 +23,14 @@
         
         body { 
             font-family: "Microsoft YaHei", "微软雅黑", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            /* 🚀 修正：背景调整为深宝蓝色电竞质感 */
-            background: radial-gradient(circle at center, var(--roche-bright-blue) 0%, var(--roche-dark-blue) 60%, var(--bg-color) 100%);
+            /* 🚀 修正：背景替换为逼真的足球球场背景（草坪条纹与球场线条结合） */
+            background-color: #1b4d22;
+            background-image: 
+                /* 禁区弧线/中圈等球场线条质感叠加 */
+                radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.15) 0%, transparent 60%),
+                radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                /* 足球场经典的深浅相间草坪条纹 */
+                repeating-linear-gradient(90deg, #143d1a 0px, #143d1a 60px, #1b4d22 60px, #1b4d22 120px);
             background-attachment: fixed;
             color: #fff; 
             text-align: center; 
@@ -90,25 +94,73 @@
             font-weight: bold; 
             margin: 15px auto; 
             padding: 12px 20px;
-            background: rgba(0, 240, 255, 0.1);
+            background: rgba(0, 0, 0, 0.4);
             border-radius: 15px;
-            border: 1px solid rgba(0, 240, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             min-height: 55px; 
             display: flex;
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0, 240, 255, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
             position: relative;
+        }
+
+        /* 🚀 全屏终极绝杀全屏遮罩层 (用于在屏幕正中央放大蹦出名字) */
+        #burstOverlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /* 🚀 狂暴震动名称：动画设定为持续3秒 (3s) */
+        .burst-winner {
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #39ff14; /* 荧光毒液绿 */
+            text-shadow: 0 0 20px rgba(57, 255, 20, 0.8), 0 0 40px rgba(57, 255, 20, 0.5);
+            /* 🚀 修正：狂暴震动及放大动画叠加，并严格限制持续 3 秒，3秒后停止在最终状态 */
+            animation: winner-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.5) forwards, winner-shaking 0.05s infinite;
+            animation-duration: 0.4s, 3s; 
+            animation-iteration-count: 1, 60; /* 0.05s * 60 = 3秒 */
+            animation-fill-mode: forwards;
+            position: relative;
+            z-index: 1010;
+            padding: 0 20px;
+        }
+
+        /* 🚀 烟雾爆开消散特效 */
+        .smoke-cloud {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px; height: 20px;
+            background: transparent;
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 
+                0 0 80px 40px rgba(255, 0, 127, 0.85), 
+                0 0 120px 70px rgba(0, 240, 255, 0.75), 
+                -50px -40px 100px 50px rgba(57, 255, 20, 0.7),
+                50px 40px 100px 50px rgba(255, 215, 0, 0.7);
+            animation: smoke-burst-disperse 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+            z-index: 1005;
         }
 
         /* 📱 员工端：签到面板 */
         .glass-panel {
             background: var(--panel-bg);
-            border: 1px solid rgba(0, 240, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 24px;
             padding: 35px 25px;
-            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(20px);
         }
 
@@ -116,11 +168,11 @@
             padding: 16px 20px; 
             font-size: 1.1rem; 
             border-radius: 16px; 
-            border: 2px solid rgba(0, 240, 255, 0.3); 
+            border: 2px solid rgba(255, 255, 255, 0.2); 
             width: 100%; 
             max-width: 320px; 
             text-align: center; 
-            background: rgba(0, 5, 15, 0.6); 
+            background: rgba(0, 0, 0, 0.6); 
             color: #fff; 
             outline: none; 
             transition: 0.3s;
@@ -155,10 +207,10 @@
             max-width: 340px;
             transition: 0.3s;
         }
-        .status-lock { color: var(--warning-color); background: rgba(255, 170, 0, 0.1); border: 1px solid rgba(255, 170, 0, 0.2); }
-        .status-go { color: var(--success-color); background: rgba(57, 255, 20, 0.1); border: 1px solid rgba(57, 255, 20, 0.3); animation: breath 1s infinite alternate; }
+        .status-lock { color: var(--warning-color); background: rgba(255, 170, 0, 0.2); border: 1px solid rgba(255, 170, 0, 0.3); }
+        .status-go { color: var(--success-color); background: rgba(57, 255, 20, 0.2); border: 1px solid rgba(57, 255, 20, 0.4); animation: breath 1s infinite alternate; }
 
-        /* 🔘 员工端：超炫赛博“足球”抢答大按钮 */
+        /* 🔘 员工端抢答大按钮 */
         #rushButton { 
             width: 240px; 
             height: 240px; 
@@ -167,16 +219,14 @@
             font-weight: 950;
             background: 
                 radial-gradient(circle at center, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.5) 100%),
-                repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 2px, transparent 2px, transparent 40px),
-                repeating-linear-gradient(-45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 2px, transparent 2px, transparent 40px),
-                #111e38;
-            color: #445577; 
-            box-shadow: 0 12px 0 #030814, inset 0 6px 15px rgba(255,255,255,0.1), 0 15px 25px rgba(0,0,0,0.6); 
+                #1a3d24;
+            color: #668877; 
+            box-shadow: 0 12px 0 #0d2616, inset 0 6px 15px rgba(255,255,255,0.1), 0 15px 25px rgba(0,0,0,0.6); 
             margin: 30px auto; 
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 8px solid #1a2a4a; 
+            border: 8px solid #255433; 
             transition: all 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
             cursor: not-allowed;
             position: relative;
@@ -187,8 +237,6 @@
         #rushButton.active { 
             background: 
                 radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.4) 100%),
-                repeating-linear-gradient(45deg, rgba(255,240,245,0.1) 0px, rgba(255,240,245,0.1) 2px, transparent 2px, transparent 40px),
-                repeating-linear-gradient(-45deg, rgba(255,240,245,0.1) 0px, rgba(255,240,245,0.1) 2px, transparent 2px, transparent 40px),
                 #ff2a6d; 
             color: white; 
             box-shadow: 0 12px 0 #5a001e, 0 0 50px rgba(255, 42, 109, 0.8); 
@@ -201,79 +249,53 @@
             box-shadow: 0 2px 0 #5a001e, 0 0 25px rgba(255, 42, 109, 0.5);
         }
 
-        /* ⏳ 综艺感3秒倒计时遮罩层 */
+        /* ⏳ 3秒倒计时遮罩层 */
         #countdownOverlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(3, 8, 20, 0.98); 
+            background: rgba(5, 20, 10, 0.98); 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
             z-index: 999; 
         }
-        /* 🚀 修正：抢按键倒计时使用极具视觉冲击力的红字 */
         #countdownNumber { 
             font-size: 15rem; font-weight: 900; 
-            color: #ff003c; /* 纯正爆燃红 */
+            color: #ff003c; /* 爆燃红 */
             text-shadow: 0 0 40px rgba(255, 0, 60, 0.6), 0 0 80px rgba(255, 0, 60, 0.4); 
             animation: popIn 0.5s ease-out infinite alternate; 
         }
         #countdownTips { font-size: 2rem; color: var(--gold-color); font-weight: bold; margin-bottom: 20px; letter-spacing: 4px; text-shadow: 0 0 12px rgba(255,215,0,0.4); }
 
-        /* 🚀 绝杀震撼出场：第一个抢到的人的震动名称样式 */
-        .burst-winner {
-            display: inline-block;
-            font-family: "Microsoft YaHei", sans-serif;
-            font-size: 2.2rem;
-            font-weight: 900;
-            color: #39ff14; /* 荧光毒液绿 */
-            text-shadow: 0 0 20px rgba(57, 255, 20, 0.8), 0 0 40px rgba(57, 255, 20, 0.4);
-            animation: winner-shaking 0.05s infinite, winner-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.5) forwards;
-            position: relative;
-            z-index: 10;
-        }
-
-        /* 🚀 绝杀爆裂粒子：纯CSS烟雾消散云效果 */
-        .smoke-cloud {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 10px; height: 10px;
-            background: transparent;
-            border-radius: 50%;
-            pointer-events: none;
-            box-shadow: 
-                0 0 60px 30px rgba(255, 0, 127, 0.7), 
-                0 0 100px 60px rgba(0, 240, 255, 0.5), 
-                -40px -30px 80px 40px rgba(57, 255, 20, 0.6),
-                40px 30px 80px 40px rgba(255, 215, 0, 0.6);
-            animation: smoke-burst-disperse 0.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
-            z-index: 5;
-        }
-
-        /* 💻 控制台中控台样式 */
+        /* 💻 控制台样式 */
         .dashboard { display: flex; justify-content: space-around; align-items: flex-start; margin-top: 10px; flex-wrap: wrap; gap: 20px; text-align: left; }
-        .panel { background: var(--panel-bg); padding: 25px; border-radius: 20px; border: 1px solid rgba(0, 240, 255, 0.2); flex: 1; min-width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        #qrcode { background: white; padding: 12px; display: inline-block; border-radius: 12px; margin-top: 10px; box-shadow: 0 0 20px rgba(255,255,255,0.1); }
-        .user-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; max-height: 250px; overflow-y: auto; padding-right: 5px; }
-        .user-badge { background: rgba(0, 240, 255, 0.08); padding: 8px 16px; border-radius: 30px; border: 1px solid var(--secondary-color); font-size: 0.95rem; display: flex; align-items: center; }
-        .admin-action-btn { background: linear-gradient(135deg, #00FF66 0%, #009933 100%); width: auto; max-width: none; border: none; font-size: 1.2rem; color: #001122; box-shadow: 0 4px 20px rgba(0,255,100,0.3); margin-bottom: 15px; }
+        .panel { background: rgba(0, 0, 0, 0.6); padding: 25px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); flex: 1; min-width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #qrcode { background: white; padding: 12px; display: inline-block; border-radius: 12px; margin-top: 10px; }
+        .user-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; max-height: 250px; overflow-y: auto; }
+        .user-badge { background: rgba(255, 255, 255, 0.1); padding: 8px 16px; border-radius: 30px; border: 1px solid #fff; font-size: 0.95rem; }
+        .admin-action-btn { background: linear-gradient(135deg, #00FF66 0%, #009933 100%); width: auto; max-width: none; border: none; font-size: 1.2rem; color: #001122; margin-bottom: 15px; }
 
-        /* 🎬 全套特效动画 */
+        /* 🎬 核心特效动画 */
         @keyframes gold-glow-flicker {
             0%, 100% { text-shadow: 0 0 12px rgba(255, 215, 0, 0.7), 0 0 24px rgba(255, 215, 0, 0.4); opacity: 1; }
             50% { text-shadow: 0 0 18px rgba(255, 215, 0, 0.9), 0 0 35px rgba(255, 215, 0, 0.6); opacity: 0.95; }
         }
         @keyframes trophy-bounce { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-8px) scale(1.05); } }
-        @keyframes neon-flicker { 0%, 100% { filter: drop-shadow(0 2px 12px rgba(255,0,127,0.5)); opacity: 1; } 95% { filter: drop-shadow(0 2px 12px rgba(255,0,127,0.5)); opacity: 1; } }
         @keyframes pulse { 0% { box-shadow: 0 12px 0 #5a001e, 0 0 30px rgba(255, 42, 109, 0.5); } 100% { box-shadow: 0 12px 0 #5a001e, 0 0 60px rgba(255, 42, 109, 0.9); } }
         @keyframes breath { 0% { opacity: 0.6; } 100% { opacity: 1; } }
         @keyframes popIn { 0% { transform: scale(0.85); } 100% { transform: scale(1.05); } }
         @keyframes shake { 0% { transform: translate(0, 0); } 50% { transform: translate(-1px, 1px); } 100% { transform: translate(1px, -1px); } }
         
-        /* 🚀 绝杀震动与烟雾消散核心动画 */
-        @keyframes winner-pop { 0% { transform: scale(0.3); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        @keyframes winner-shaking { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 25% { transform: translate(-2px, 2px) rotate(-1deg); } 75% { transform: translate(2px, -2px) rotate(1deg); } }
+        /* 🚀 绝杀核心动画：从中心蹦出 + 狂暴颤抖 */
+        @keyframes winner-pop { 0% { transform: scale(0.1); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes winner-shaking { 
+            0%, 100% { transform: scale(1) translate(0, 0) rotate(0deg); } 
+            20% { transform: scale(1) translate(-4px, 4px) rotate(-1.5deg); } 
+            40% { transform: scale(1) translate(4px, -3px) rotate(1.5deg); }
+            60% { transform: scale(1) translate(-3px, -2px) rotate(-1deg); }
+            80% { transform: scale(1) translate(3px, 3px) rotate(1deg); }
+        }
+        /* 🚀 烟雾爆破消散 */
         @keyframes smoke-burst-disperse {
-            0% { box-shadow: 0 0 10px 10px rgba(255,0,127,0.8), 0 0 10px 10px rgba(0,240,255,0.8); opacity: 1; }
-            100% { box-shadow: 0 0 140px 90px rgba(255,0,127,0.0), 0 0 200px 120px rgba(0,240,255,0.0); transform: translate(-50%, -50%) scale(4); opacity: 0; }
+            0% { box-shadow: 0 0 10px 10px rgba(255,0,127,0.9), 0 0 10px 10px rgba(0,240,255,0.9); opacity: 1; }
+            100% { box-shadow: 0 0 18px 120px rgba(255,0,127,0), 0 0 250px 160px rgba(0,240,255,0); transform: translate(-50%, -50%) scale(4.5); opacity: 0; }
         }
         .hidden { display: none !important; }
     </style>
@@ -281,9 +303,11 @@
 <body>
 
     <div id="countdownOverlay" class="hidden">
-        <div id="countdownTips">🏆 大力神杯 🏆</div>
+        <div id="countdownTips">🏆 大力神杯系列赛 - 预备 🏆</div>
         <div id="countdownNumber">3</div>
     </div>
+
+    <div id="burstOverlay" class="hidden"></div>
 
     <div class="container">
         
@@ -303,8 +327,8 @@
         
         <div id="resultView">🏆 加入战队，竞速抢答！ </div>
 
-        <div id="loginView" class="hidden class-panel">
-            <input type="text" id="usernameInput" placeholder="请输入您所属区域（如：北一区）" autocomplete="off"><br>
+        <div id="loginView" class="hidden glass-panel">
+            <input type="text" id="usernameInput" placeholder="请输入您所属赛事区域（如：北一区）" autocomplete="off"><br>
             <button class="action-btn" onclick="register()">锁定身份 ➡️ 入场</button>
         </div>
 
@@ -326,10 +350,6 @@
                 <h3 style="color: var(--gold-color); margin-top: 0; font-size: 1.2rem;">⚙️ MCE 赛事中控台</h3>
                 <button id="adminStartBtn" class="action-btn admin-action-btn" onclick="startQuiz()">🔥 启动极速抢答（3秒倒计）</button>
                 <button class="action-btn admin-action-btn" onclick="luckyDraw()">🎯 随机点将回答啦！ </button>
-                <p style="color: #666; font-size: 0.85rem; margin-top: 15px; line-height: 1.5; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
-                    💡 <b>完美控场流程：</b><br>
-                    当您点按【开启】后，所有人的手机会立刻强制黑屏并闪烁 3, 2, 1！数到 0 的瞬间，员工手机按钮会自动“炸裂变红并疯狂抖动”，最完美的公平对决！
-                </p>
             </div>
         </div>
     </div>
@@ -391,6 +411,9 @@
         function luckyDraw() { socket.emit('luckyDraw'); }
 
         socket.on('quizStarted', () => {
+            // 每次新开题目时，隐藏绝杀全屏遮罩
+            document.getElementById('burstOverlay').classList.add('hidden');
+            
             runCountdown(3, () => {
                 document.getElementById('resultView').innerHTML = "⚡️ GO！向大力神杯冲刺！  ⚡️";
                 
@@ -433,18 +456,27 @@
             }, 1000);
         }
 
-        // 🚀 核心修改：接收到赢家时触发“大字体震动” + “烟雾爆破消散”特效
+        // 🚀 核心逻辑修改：触发“正中央蹦出名字”、“狂暴颤抖3秒后停止”及“烟雾爆开消散”绝杀特效
         socket.on('quizEnd', (winnerName) => {
             clearInterval(countdownTimer); 
             document.getElementById('countdownOverlay').classList.add('hidden');
             if(document.getElementById('adminStartBtn')) document.getElementById('adminStartBtn').disabled = false;
 
-            // 注入绝杀动画骨架：外层粒子爆开，名字高频震动
-            const resultBox = document.getElementById('resultView');
-            resultBox.innerHTML = `
+            // 更新顶部结果栏
+            document.getElementById('resultView').innerText = `🏆 本题得主：【${winnerName}】 成功捧杯！`;
+
+            // 激活全屏绝杀特效遮罩层
+            const burstBox = document.getElementById('burstOverlay');
+            burstBox.innerHTML = `
                 <div class="smoke-cloud"></div>
                 <div class="burst-winner">🏆 绝杀：【${winnerName}】 夺得头筹！</div>
             `;
+            burstBox.classList.remove('hidden');
+
+            // 🚀 3秒后自动隐藏全屏绝杀遮罩层，让参赛者能看清后续界面
+            setTimeout(() => {
+                burstBox.classList.add('hidden');
+            }, 4500); // 给足3秒疯狂震动加烟雾淡出时间
             
             lockPlayerButton("已有人捷足先登，蓄力下一题...");
         });
