@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>罗氏MCE大力神杯竞赛</title>
+    <title>⚡ 极限手速 - 团建趣味抢答 ⚡</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <style>
-        /* 🎨 罗氏官方蓝白 x 荣耀金电竞风 */
+        /* 🎨 全局赛博朋克电竞风 */
         :root {
-            --roche-blue: #0066CC;       /* 罗氏经典蓝 */
-            --roche-dark: #002244;       /* 深海商务蓝 */
-            --roche-light: #F4F8FC;      /* 纯净科技白 bg */
-            --cyan-glow: #00F0FF;        /* 炫酷荧光蓝 */
-            --gold-winner: #FFD700;      /* 大力神杯荣耀金 */
-            --panel-bg: rgba(0, 34, 68, 0.85);
+            --bg-color: #0a0a16;
+            --primary-color: #ff007f;
+            --secondary-color: #00f0ff;
+            --success-color: #39ff14;
+            --warning-color: #ffaa00;
+            --panel-bg: rgba(20, 20, 45, 0.7);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: radial-gradient(circle at center, var(--roche-dark) 0%, #000b18 100%); 
+            background: radial-gradient(circle at center, #1b113a 0%, var(--bg-color) 100%); 
             color: #fff; 
             text-align: center; 
             margin: 0; 
@@ -32,117 +32,84 @@
             justify-content: center;
         }
 
-        .container { max-width: 850px; margin: 0 auto; width: 100%; position: relative; z-index: 2; }
+        .container { max-width: 800px; margin: 0 auto; width: 100%; position: relative; z-index: 2; }
         
-        /* 🏆 顶部罗氏MCE大力神杯布局（含奖杯） */
-        .header-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 5px;
-        }
-
-        /* 炫酷黄金奖杯图标 CSS 拟真绘制 */
-        .trophy-icon {
-            width: 45px;
-            height: 55px;
-            background: linear-gradient(45deg, #FFD700, #FFA500, #FFFACD, #FFD700);
-            clip-path: polygon(20% 0%, 80% 0%, 90% 20%, 70% 50%, 80% 85%, 50% 100%, 20% 85%, 30% 50%, 10% 20%);
-            filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.8));
-            animation: trophy-glow 1.5s infinite alternate;
-            flex-shrink: 0;
-        }
-
         h1 { 
-            font-size: 1.9rem; 
+            font-size: 2.2rem; 
             font-weight: 900;
-            letter-spacing: 1px;
-            background: linear-gradient(135deg, #FFF 30%, var(--cyan-glow) 100%);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin: 0;
-            text-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
-            text-align: left;
+            margin-bottom: 5px;
+            filter: drop-shadow(0 2px 10px rgba(255,0,127,0.3));
         }
 
-        /* 📍 副标题：请参赛者们入场签到 */
-        .sub-title {
-            font-size: 1.2rem;
-            color: var(--cyan-glow);
-            font-weight: bold;
-            letter-spacing: 2px;
-            margin-top: 5px;
-            margin-bottom: 25px;
-            text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
-            animation: pulse-text 2s infinite;
-        }
-
-        /* 🏆 结果公告栏 */
+        /* 🏆 结果公告栏优化 */
         #resultView { 
-            font-size: 1.4rem; 
+            font-size: 1.5rem; 
             color: #fff; 
             font-weight: bold; 
             margin: 15px auto; 
             padding: 12px 20px;
-            background: rgba(0, 102, 204, 0.2);
-            border-radius: 16px;
-            border: 1px solid rgba(0, 240, 255, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             min-height: 55px; 
             display: flex;
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0, 102, 204, 0.2);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
-        /* 📱 登录面板 */
+        /* 📱 员工端：签到输入框与按钮 */
         .glass-panel {
             background: var(--panel-bg);
-            border: 2px solid rgba(0, 102, 204, 0.4);
+            border: 1px solid rgba(0, 240, 255, 0.2);
             border-radius: 24px;
             padding: 35px 25px;
-            box-shadow: 0 15px 35px rgba(0, 102, 204, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.1);
             backdrop-filter: blur(20px);
         }
 
         input { 
             padding: 16px 20px; 
             font-size: 1.1rem; 
-            border-radius: 14px; 
-            border: 2px solid rgba(0, 102, 204, 0.3); 
+            border-radius: 16px; 
+            border: 2px solid rgba(255, 255, 255, 0.1); 
             width: 100%; 
             max-width: 320px; 
             text-align: center; 
-            background: rgba(0, 0, 0, 0.5); 
+            background: rgba(0, 0, 0, 0.4); 
             color: #fff; 
             outline: none; 
             transition: 0.3s;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         input:focus { 
-            border-color: var(--cyan-glow); 
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+            border-color: var(--secondary-color); 
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
         }
 
         .action-btn { 
-            background: linear-gradient(135deg, var(--roche-blue) 0%, #004499 100%); 
+            background: linear-gradient(135deg, var(--primary-color) 0%, #b0005d 100%); 
             color: white; 
-            border: 1px solid var(--cyan-glow);
+            border: none; 
             padding: 16px 40px; 
             font-size: 1.2rem; 
             font-weight: bold;
-            border-radius: 14px; 
+            border-radius: 16px; 
             cursor: pointer; 
             transition: 0.2s; 
-            box-shadow: 0 6px 20px rgba(0, 102, 204, 0.4);
+            box-shadow: 0 6px 20px rgba(255, 0, 127, 0.4);
             width: 100%;
             max-width: 320px;
-            letter-spacing: 1px;
         }
-        .action-btn:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(0, 102, 204, 0.2); }
+        .action-btn:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(255, 0, 127, 0.2); }
 
-        /* 🚨 状态提示条 */
+        /* 🚨 员工端：状态提示条 */
         #statusText { 
             font-size: 1.1rem; 
             font-weight: bold; 
@@ -150,114 +117,113 @@
             border-radius: 12px; 
             margin: 15px auto;
             max-width: 340px;
+            transition: 0.3s;
         }
-        .status-lock { color: #aaa; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
-        .status-go { color: var(--gold-winner); background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.4); animation: breath 1s infinite alternate; }
+        .status-lock { color: var(--warning-color); background: rgba(255, 170, 0, 0.1); border: 1px solid rgba(255, 170, 0, 0.2); }
+        .status-go { color: var(--success-color); background: rgba(57, 255, 20, 0.1); border: 1px solid rgba(57, 255, 20, 0.3); animation: breath 1s infinite alternate; }
 
-        /* 🔘 罗氏精英抢答键 */
+        /* 🔘 员工端：超炫抢答大按钮 */
         #rushButton { 
-            width: 230px; 
-            height: 230px; 
+            width: 240px; 
+            height: 240px; 
             border-radius: 50%; 
-            font-size: 2.2rem; 
+            font-size: 2rem; 
             font-weight: 900;
-            background: radial-gradient(circle at center, #112244 0%, #001122 100%); 
-            color: rgba(255,255,255,0.2); 
-            box-shadow: 0 10px 0 #000818, inset 0 4px 10px rgba(255,255,255,0.05); 
-            margin: 35px auto; 
+            background: radial-gradient(circle at center, #252538 0%, #151522 100%); 
+            color: #555566; 
+            box-shadow: 0 10px 0 #0d0d16, inset 0 4px 10px rgba(255,255,255,0.05); 
+            margin: 30px auto; 
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 6px solid #1a3366; 
-            transition: all 0.12s ease-out; 
+            border: 6px solid #2d2d3f; 
+            transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
             cursor: not-allowed;
+            position: relative;
         }
-        /* 激活状态：瞬间爆燃变金黄色（捧杯时刻） */
+        /* 激活状态：原地炸裂变红 */
         #rushButton.active { 
-            background: radial-gradient(circle at center, #FFD700 0%, #CC9900 100%); 
-            color: #002244; 
-            box-shadow: 0 10px 0 #886600, 0 0 45px rgba(255, 215, 0, 0.7); 
-            border: 6px solid #FFFACD; 
+            background: radial-gradient(circle at center, #ff2a6d 0%, #910031 100%); 
+            color: white; 
+            box-shadow: 0 10px 0 #5a001e, 0 0 40px rgba(255, 42, 109, 0.6); 
+            border: 6px solid #ff6596; 
             cursor: pointer; 
-            animation: shake 0.1s infinite;
+            animation: pulse 0.6s infinite alternate, shake 0.1s infinite;
         }
         #rushButton:active:not(:disabled) {
             transform: translateY(8px);
-            box-shadow: 0 2px 0 #886600, 0 0 20px rgba(255, 215, 0, 0.5);
+            box-shadow: 0 2px 0 #5a001e, 0 0 20px rgba(255, 42, 109, 0.4);
         }
 
-        /* ⏳ 3秒全屏倒计时 */
+        /* ⏳ 综艺感3秒倒计时遮罩层 */
         #countdownOverlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 15, 35, 0.97); 
+            background: rgba(6, 6, 15, 0.96); 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
             z-index: 999; 
         }
         #countdownNumber { 
-            font-size: 13rem; font-weight: 900; color: var(--cyan-glow); 
-            text-shadow: 0 0 50px rgba(0, 240, 255, 0.8); 
+            font-size: 14rem; font-weight: 900; color: var(--primary-color); 
+            text-shadow: 0 0 50px rgba(255, 0, 127, 0.8); 
             animation: popIn 0.5s ease-out infinite alternate; 
         }
-        #countdownTips { font-size: 2rem; color: var(--gold-winner); font-weight: bold; margin-bottom: 20px; letter-spacing: 4px; text-shadow: 0 0 12px rgba(255,215,0,0.4); }
+        #countdownTips { font-size: 1.8rem; color: var(--secondary-color); font-weight: bold; margin-bottom: 20px; letter-spacing: 4px; text-shadow: 0 0 10px rgba(0,240,255,0.5); }
 
-        /* 💻 主持人控制台（经典硬朗排版） */
+        /* 💻 主持人大屏控制台样式（保持硬朗排版） */
         .dashboard { display: flex; justify-content: space-around; align-items: flex-start; margin-top: 10px; flex-wrap: wrap; gap: 20px; text-align: left; }
-        .panel { background: var(--panel-bg); padding: 25px; border-radius: 20px; border: 1px solid rgba(0, 102, 204, 0.3); flex: 1; min-width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        #qrcode { background: white; padding: 12px; display: inline-block; border-radius: 12px; margin-top: 10px; }
-        .user-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; max-height: 250px; overflow-y: auto; }
-        .user-badge { background: rgba(0, 102, 204, 0.15); padding: 8px 16px; border-radius: 30px; border: 1px solid var(--roche-blue); font-size: 0.95rem; }
-        .admin-action-btn { background: linear-gradient(135deg, #00FFcc 0%, #0099ff 100%); width: auto; max-width: none; border: none; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,255,200,0.2); }
+        .panel { background: var(--panel-bg); padding: 25px; border-radius: 20px; border: 1px solid rgba(0, 240, 255, 0.1); flex: 1; min-width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #qrcode { background: white; padding: 12px; display: inline-block; border-radius: 12px; margin-top: 10px; box-shadow: 0 0 20px rgba(255,255,255,0.1); }
+        .user-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; max-height: 250px; overflow-y: auto; padding-right: 5px; }
+        .user-badge { background: rgba(255, 255, 255, 0.05); padding: 8px 16px; border-radius: 30px; border: 1px solid rgba(255,0,127,0.3); font-size: 0.95rem; display: flex; align-items: center; }
+        .admin-action-btn { background: linear-gradient(135deg, #00f0ff 0%, #0072ff 100%); width: auto; max-width: none; box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3); margin-bottom: 15px; }
 
-        /* 🎬 特效动画 */
-        @keyframes trophy-glow { 0% { transform: scale(0.95); filter: drop-shadow(0 0 8px rgba(255,215,0,0.6)); } 100% { transform: scale(1.05); filter: drop-shadow(0 0 18px rgba(255,215,0,0.9)); } }
-        @keyframes pulse-text { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; filter: brightness(1.2); } }
-        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(1.1); opacity: 1; } }
-        @keyframes shake { 0% { transform: translate(0, 0); } 50% { transform: translate(-1px, 1px); } 100% { transform: translate(1px, -1px); } }
+        /* 🎬 炫酷动画特效 */
+        @keyframes pulse { 0% { box-shadow: 0 10px 0 #5a001e, 0 0 30px rgba(255, 42, 109, 0.5); } 100% { box-shadow: 0 10px 0 #5a001e, 0 0 60px rgba(255, 42, 109, 0.9); } }
+        @keyframes breath { 0% { opacity: 0.6; } 100% { opacity: 1; } }
+        @keyframes popIn { 0% { transform: scale(0.7); opacity: 0.5; } 100% { transform: scale(1.1); opacity: 1; } }
+        @keyframes shake { 0% { transform: translate(0, 0) rotate(0deg); } 25% { transform: translate(-1px, 1px) rotate(-0.5deg); } 50% { transform: translate(1px, -1px) rotate(0.5deg); } 75% { transform: translate(-1px, -1px) rotate(0deg); } 100% { transform: translate(1px, 1px) rotate(0deg); } }
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
     <div id="countdownOverlay" class="hidden">
-        <div id="countdownTips">🏆 大力神杯系列赛 - 预备 🏆</div>
+        <div id="countdownTips">⚡ 全 员 预 备 ⚡</div>
         <div id="countdownNumber">3</div>
     </div>
 
     <div class="container">
-        <div class="header-wrapper">
-            <div class="trophy-icon"></div>
-            <h1>罗氏MCE大力神杯竞赛</h1>
-        </div>
-        <div class="sub-title">請參賽者們入場簽到</div>
+        <h1 id="mainTitle">⚡ SPEED RUSH ⚡</h1>
+        <div id="resultView">🏆 欢迎来到王牌抢答战场</div>
 
-        <div id="resultView">💎 卓越医疗，手速加冕</div>
-
-        <div id="loginView" class="hidden glass-panel">
-            <input type="text" id="usernameInput" placeholder="请输入您的代号（如：张三 - 销售部）" autocomplete="off"><br>
-            <button class="action-btn" onclick="register()">锁定代号 ➡️ 进场</button>
+        <div id="loginView" class="hidden class-panel">
+            <h2 style="color: var(--secondary-color); font-size: 1.5rem; margin-top: 0;">加入这场博弈</h2>
+            <p style="color: #aaa; margin-bottom: 25px;">请输入您的专属代号：</p>
+            <input type="text" id="usernameInput" placeholder="例如：张三 - 运营部" autocomplete="off"><br>
+            <button class="action-btn" onclick="register()">锁定身份 ➡️ 进场</button>
         </div>
 
         <div id="playerView" class="hidden">
-            <p style="font-size: 1.1rem; color: #aaa; margin: 5px 0;">当前选手：<span id="myTitle" style="color:var(--cyan-glow); font-weight: 900;"></span></p>
-            <div id="statusText" class="status-lock">🔒 请听主持人宣读题目...</div>
-            <button id="rushButton" disabled onclick="pressButton()">READY</button>
+            <p style="font-size: 1.1rem; color: #aaa; margin: 5px 0;">当前身份：<span id="myTitle" style="color:var(--secondary-color); font-weight: 900;"></span></p>
+            <div id="statusText" class="status-lock">🔒 主持人正在蓄力题目...</div>
+            <button id="rushButton" disabled onclick="pressButton()">HOLD</button>
         </div>
 
         <div id="adminView" class="dashboard hidden">
             <div class="panel">
-                <h3 style="color: var(--cyan-glow); margin-top: 0; font-size: 1.1rem;">📱 赛事集结专属二维码</h3>
+                <h3 style="color: var(--secondary-color); margin-top: 0; font-size: 1.2rem;">📢 全员集结二维码</h3>
                 <div id="qrcode"></div>
-                <h4 style="margin-top: 20px; margin-bottom: 10px; color: #aaa;">已就位选手 (<span id="userCount" style="color:var(--gold-winner); font-weight: bold;">0</span> 人)：</h4>
+                <h4 style="margin-top: 20px; margin-bottom: 10px; color: #aaa;">已链入特工 (<span id="userCount" style="color:var(--primary-color); font-weight: bold;">0</span> 人)：</h4>
                 <div class="user-list" id="userList"></div>
             </div>
             
             <div class="panel" style="display: flex; flex-direction: column; justify-content: center;">
-                <h3 style="color: var(--gold-winner); margin-top: 0; font-size: 1.1rem;">⚙️ 罗氏中央赛事控制台</h3>
-                <button id="adminStartBtn" class="action-btn admin-action-btn" onclick="startQuiz()" style="background: linear-gradient(135deg, #00FF66 0%, #009933 100%); box-shadow: 0 4px 20px rgba(0,255,100,0.3); font-size: 1.2rem; color: #001122;">🔥 启动极速抢答（3秒倒计时）</button>
-                <button class="action-btn admin-action-btn" onclick="luckyDraw()" style="background: linear-gradient(135deg, #0066CC 0%, #002244 100%);">🎯 随机点将回答</button>
+                <h3 style="color: var(--primary-color); margin-top: 0; font-size: 1.2rem;">⚙️ 指挥中枢</h3>
+                <button id="adminStartBtn" class="action-btn admin-action-btn" onclick="startQuiz()" style="background: linear-gradient(135deg, #39ff14 0%, #00aa00 100%); box-shadow: 0 4px 20px rgba(57,255,20,0.3); font-size: 1.3rem;">🔥 开启 3 秒盲盒抢答</button>
+                <button class="action-btn admin-action-btn" onclick="luckyDraw()">🎯 呼叫幸运制裁（随机抽一人）</button>
                 <p style="color: #666; font-size: 0.85rem; margin-top: 15px; line-height: 1.5; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
-                    💡 <b>蓝白竞技控场指引：</b><br>
-                    读完题点击【启动】后，全员手机屏幕会被瞬间锁定，高燃闪烁 3, 2, 1！数到 0 的瞬间，员工端按钮自动炸裂烫金并震颤，点爆全场！
+                    💡 <b>完美控场流程：</b><br>
+                    当您点按【开启】后，所有人的手机会立刻强制黑屏并闪烁 3, 2, 1！数到 0 的瞬间，员工手机按钮会自动“炸裂变红并疯狂抖动”，最完美的公平对决！
                 </p>
             </div>
         </div>
@@ -275,7 +241,7 @@
 
             if (isClientAdmin) {
                 document.getElementById('adminView').classList.remove('hidden');
-                document.getElementById('mainTitle').innerText = "💻 ROCHE MCE COMMAND (中枢大屏)";
+                document.getElementById('mainTitle').innerText = "💻 CONTROL PANEL (指挥大屏)";
                 
                 let staffUrl = window.location.origin + window.location.pathname;
                 new QRCode(document.getElementById("qrcode"), {
@@ -294,7 +260,7 @@
 
         function register() {
             const name = document.getElementById('usernameInput').value.trim();
-            if(!name) return alert('请输入您的名字参加挑战！');
+            if(!name) return alert('请输入您的代号哦！');
             myName = name;
             socket.emit('register', name);
         }
@@ -309,7 +275,7 @@
             const countEl = document.getElementById('userCount');
             if(countEl) countEl.innerText = list.length;
             const container = document.getElementById('userList');
-            if(container) container.innerHTML = list.map(user => `<div class="user-badge">🔬 ${user}</div>`).join('');
+            if(container) container.innerHTML = list.map(user => `<div class="user-badge">⚡ ${user}</div>`).join('');
         });
 
         function startQuiz() { socket.emit('startQuiz'); }
@@ -317,16 +283,16 @@
 
         socket.on('quizStarted', () => {
             runCountdown(3, () => {
-                document.getElementById('resultView').innerText = "⚡️ GO！向大力神杯冲刺！ ⚡️";
+                document.getElementById('resultView').innerText = "⚡️ GO！全员疯狂轰炸！ ⚡️";
                 
                 const btn = document.getElementById('rushButton');
                 const status = document.getElementById('statusText');
                 if(btn && !isClientAdmin) {
                     btn.disabled = false;
-                    btn.innerText = "RUSH";
+                    btn.innerText = "RUSH!";
                     btn.classList.add('active');
                     status.className = "status-go";
-                    status.innerText = "🔥 大杯已开！速拍金键！！";
+                    status.innerText = "🔥 战道已开！疯狂按压！！";
                 }
             });
         });
@@ -341,7 +307,7 @@
             
             let current = seconds;
             numEl.innerText = current;
-            numEl.style.color = "var(--cyan-glow)";
+            numEl.style.color = "var(--primary-color)";
             
             clearInterval(countdownTimer);
             countdownTimer = setInterval(() => {
@@ -350,7 +316,7 @@
                     numEl.innerText = current;
                 } else if (current === 0) {
                     numEl.innerText = "GO!";
-                    numEl.style.color = "var(--gold-winner)";
+                    numEl.style.color = "var(--success-color)";
                 } else {
                     clearInterval(countdownTimer);
                     overlay.classList.add('hidden'); 
@@ -367,16 +333,16 @@
             document.getElementById('countdownOverlay').classList.add('hidden');
             if(document.getElementById('adminStartBtn')) document.getElementById('adminStartBtn').disabled = false;
 
-            document.getElementById('resultView').innerText = `🏆 本题得主：【${winnerName}】 成功夺位！`;
-            lockPlayerButton("已有人捷足先登，等待下一轮...");
+            document.getElementById('resultView').innerText = `🎉 绝杀出炉：【${winnerName}】 夺得头筹！`;
+            lockPlayerButton("名额被爆，蓄力下一题...");
         });
 
         socket.on('drawResult', (luckyName) => {
-            document.getElementById('resultView').innerText = `🎯 命运钦点：【${luckyName}】 连线回答！`;
+            document.getElementById('resultView').innerText = `🎯 命运召唤：【${luckyName}】 被强制选中！`;
         });
 
         socket.on('invalidPress', () => {
-            lockPlayerButton("违规抢跑！等候指令！");
+            lockPlayerButton("抢跑无效！请等候发令！");
         });
 
         function lockPlayerButton(msg) {
@@ -384,7 +350,7 @@
             const status = document.getElementById('statusText');
             if(btn) {
                 btn.disabled = true;
-                btn.innerText = "READY";
+                btn.innerText = "HOLD";
                 btn.classList.remove('active');
                 status.className = "status-lock";
                 status.innerText = "🔒 " + msg;
