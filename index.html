@@ -42,7 +42,6 @@
 
         .container { max-width: 800px; margin: 0 auto; width: 100%; position: relative; z-index: 2; }
         
-        /* 🏆 标题包裹层 - 🚀 修正：修改为 flex-direction: column 让奖杯和文字上下排布 */
         .header-wrap {
             display: inline-flex;
             flex-direction: column;
@@ -64,7 +63,6 @@
             animation: gold-glow-flicker 2s infinite alternate;
         }
 
-        /* 🌟 大卡通奖杯样式与动画 - 🚀 修正：添加 margin-bottom 让奖杯与下方文字拉开美观间距 */
         .cartoon-trophy {
             width: 70px;  
             height: 70px;
@@ -88,7 +86,6 @@
             animation: neon-flicker 2s infinite alternate;
         }
 
-        /* 🏆 结果公告栏优化 */
         #resultView { 
             font-size: 1.5rem; 
             color: #fff; 
@@ -107,7 +104,6 @@
             position: relative;
         }
 
-        /* 🚀 全屏终极绝杀全屏遮罩层 (用于在屏幕正中央放大蹦出名字) */
         #burstOverlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -120,7 +116,6 @@
             z-index: 1000;
         }
 
-        /* 🚀 狂暴震动名称：动画设定为持续3秒 (3s) */
         .burst-winner {
             font-family: "Microsoft YaHei", sans-serif;
             font-size: 3.5rem;
@@ -136,7 +131,6 @@
             padding: 0 20px;
         }
 
-        /* 🚀 新增：随机点将人名的霓虹闪现样式 */
         .lucky-star {
             font-family: "Microsoft YaHei", sans-serif;
             font-size: 3.5rem;
@@ -149,7 +143,6 @@
             padding: 0 20px;
         }
 
-        /* 🚀 烟雾爆开消散特效 */
         .smoke-cloud {
             position: absolute;
             top: 50%; left: 50%;
@@ -167,7 +160,6 @@
             z-index: 1005;
         }
 
-        /* 📱 员工端：签到面板 */
         .glass-panel {
             background: var(--panel-bg);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -177,7 +169,7 @@
             backdrop-filter: blur(20px);
         }
 
-        input { 
+        input, select { 
             padding: 16px 20px; 
             font-size: 1.1rem; 
             border-radius: 16px; 
@@ -185,16 +177,18 @@
             width: 100%; 
             max-width: 320px; 
             text-align: center; 
+            text-align-last: center; /* 让select文字也居中 */
             background: rgba(0, 0, 0, 0.6); 
             color: #fff; 
             outline: none; 
             transition: 0.3s;
             margin-bottom: 20px;
         }
-        input:focus { 
+        input:focus, select:focus { 
             border-color: var(--secondary-color); 
             box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
         }
+        select option { background: #143d1a; color: #fff; } /* 适配手机选择框下拉背景 */
 
         .action-btn { 
             background: linear-gradient(135deg, var(--primary-color) 0%, #b0005d 100%); 
@@ -223,7 +217,6 @@
         .status-lock { color: var(--warning-color); background: rgba(255, 170, 0, 0.2); border: 1px solid rgba(255, 170, 0, 0.3); }
         .status-go { color: var(--success-color); background: rgba(57, 255, 20, 0.2); border: 1px solid rgba(57, 255, 20, 0.4); animation: breath 1s infinite alternate; }
 
-        /* 🔘 员工端抢答大按钮 */
         #rushButton { 
             width: 240px; 
             height: 240px; 
@@ -262,7 +255,6 @@
             box-shadow: 0 2px 0 #5a001e, 0 0 25px rgba(255, 42, 109, 0.5);
         }
 
-        /* ⏳ 3秒倒计时遮罩层 */
         #countdownOverlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(5, 20, 10, 0.98); 
@@ -277,7 +269,6 @@
         }
         #countdownTips { font-size: 2rem; color: var(--gold-color); font-weight: bold; margin-bottom: 20px; letter-spacing: 4px; text-shadow: 0 0 12px rgba(255,215,0,0.4); }
 
-        /* 💻 控制台样式 */
         .dashboard { display: flex; justify-content: space-around; align-items: flex-start; margin-top: 10px; flex-wrap: wrap; gap: 20px; text-align: left; }
         .panel { background: rgba(0, 0, 0, 0.6); padding: 25px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); flex: 1; min-width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         #qrcode { background: white; padding: 12px; display: inline-block; border-radius: 12px; margin-top: 10px; }
@@ -285,7 +276,6 @@
         .user-badge { background: rgba(255, 255, 255, 0.1); padding: 8px 16px; border-radius: 30px; border: 1px solid #fff; font-size: 0.95rem; }
         .admin-action-btn { background: linear-gradient(135deg, #00FF66 0%, #009933 100%); width: auto; max-width: none; border: none; font-size: 1.2rem; color: #001122; margin-bottom: 15px; }
 
-        /* 🎬 核心特效动画 */
         @keyframes gold-glow-flicker {
             0%, 100% { text-shadow: 0 0 12px rgba(255, 215, 0, 0.7), 0 0 24px rgba(255, 215, 0, 0.4); opacity: 1; }
             50% { text-shadow: 0 0 18px rgba(255, 215, 0, 0.9), 0 0 35px rgba(255, 215, 0, 0.6); opacity: 0.95; }
@@ -295,7 +285,6 @@
         @keyframes breath { 0% { opacity: 0.6; } 100% { opacity: 1; } }
         @keyframes popIn { 0% { transform: scale(0.85); } 100% { transform: scale(1.05); } }
         @keyframes shake { 0% { transform: translate(0, 0); } 50% { transform: translate(-1px, 1px); } 100% { transform: translate(1px, -1px); } }
-        
         @keyframes winner-pop { 0% { transform: scale(0.1); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         @keyframes winner-shaking { 
             0%, 100% { transform: scale(1) translate(0, 0) rotate(0deg); } 
@@ -318,7 +307,7 @@
 <body>
 
     <div id="countdownOverlay" class="hidden">
-        <div id="countdownTips">🏆 大力神杯系列赛 🏆</div>
+        <div id="countdownTips">🏆 大力神杯系列赛 - 预备 🏆</div>
         <div id="countdownNumber">3</div>
     </div>
 
@@ -338,13 +327,29 @@
             <div class="top-event-title">MCE 大力神杯</div>
         </div>
         
-        <h1 id="mainTitle"> SPEED⚡RUSH </h1>
+        <h1 id="mainTitle">⚡ SPEED RUSH ⚡</h1>
         
         <div id="resultView">🏆 加入战队，竞速抢答！ </div>
 
         <div id="loginView" class="hidden glass-panel">
-            <input type="text" id="usernameInput" placeholder="请输入您所属赛事区（如：北一区）" autocomplete="off"><br>
-            <button class="action-btn" onclick="register()">锁定身份 ➡️ 入场</button>
+            <h2 style="color: var(--secondary-color); font-size: 1.5rem; margin-top: 0;">加入这场博弈</h2>
+            
+            <p style="color: #aaa; margin-bottom: 10px;">请输入您的个人昵称：</p>
+            <input type="text" id="usernameInput" placeholder="例如：张三" autocomplete="off">
+            
+            <p style="color: #aaa; margin-bottom: 10px; margin-top: 10px;">请选择您所属的战队：</p>
+            <select id="teamSelect">
+                <option value="" disabled selected>-- 请选择您的战队 --</option>
+                <option value="中区">中区</option>
+                <option value="东区">东区</option>
+                <option value="西南区">西南区</option>
+                <option value="北二区">北二区</option>
+                <option value="南区">南区</option>
+                <option value="北一区">北一区</option>
+                <option value="西北区">西北区</option>
+            </select>
+            <br>
+            <button class="action-btn" onclick="register()" style="margin-top: 15px;">锁定身份 ➡️ 入场</button>
         </div>
 
         <div id="playerView" class="hidden">
@@ -382,7 +387,7 @@
             if (isClientAdmin) {
                 document.getElementById('adminView').classList.remove('hidden');
                 document.getElementById('mainTitle').innerText = "SPEED RUSH";
-                document.querySelector('.top-event-title').innerText = "💻 MCE 大力神杯中控台";
+                document.querySelector('.top-event-title').innerText = "💻 MCE COMMAND PANEL";
                 if(document.querySelector('.cartoon-trophy')) document.querySelector('.cartoon-trophy').style.display = 'none';
                 
                 let staffUrl = window.location.origin + window.location.pathname;
@@ -401,13 +406,24 @@
         };
 
         function register() {
-            const name = document.getElementById('usernameInput').value.trim();
-            if(!name) return alert('请输入您所属赛事区域哦！');
-            myName = name;
-            socket.emit('register', name);
+            const nickname = document.getElementById('usernameInput').value.trim();
+            const team = document.getElementById('teamSelect').value;
+            
+            // 🚀 核心验证逻辑：昵称不能为空，且必须选择战队
+            if (!nickname) return alert('代号不能为空，请输入您的昵称！');
+            if (!team) return alert('请选择您所属的战队！');
+            
+            // 将战队名和昵称融合在一起，作为系统的最终通信身份
+            myName = `【${team}】${nickname}`;
+            socket.emit('register', myName);
         }
 
-        function pressButton() { socket.emit('pressButton'); }
+        function pressButton() { 
+            if (!myName) {
+                myName = document.getElementById('myTitle').innerText.trim();
+            }
+            socket.emit('pressButton', myName); 
+        }
 
         socket.on('registered', (name) => {
             document.getElementById('loginView').classList.add('hidden');
@@ -475,12 +491,12 @@
             document.getElementById('countdownOverlay').classList.add('hidden');
             if(document.getElementById('adminStartBtn')) document.getElementById('adminStartBtn').disabled = false;
 
-            document.getElementById('resultView').innerText = `🏆 本题得主：【${winnerName}】 成功捧杯！`;
+            document.getElementById('resultView').innerText = `🏆 本题得主：${winnerName} 成功捧杯！`;
 
             const burstBox = document.getElementById('burstOverlay');
             burstBox.innerHTML = `
                 <div class="smoke-cloud"></div>
-                <div class="burst-winner">🏆 绝杀：【${winnerName}】 夺得头筹！</div>
+                <div class="burst-winner">🏆 绝杀：${winnerName} 夺得头筹！</div>
             `;
             burstBox.classList.remove('hidden');
 
@@ -492,12 +508,12 @@
         });
 
         socket.on('drawResult', (luckyName) => {
-            document.getElementById('resultView').innerHTML = `🎯 命运钦点：【${luckyName}】 请上前回答！`;
+            document.getElementById('resultView').innerHTML = `🎯 命运钦点：${luckyName} 请上前回答！`;
 
             const burstBox = document.getElementById('burstOverlay');
             burstBox.innerHTML = `
                 <div class="smoke-cloud"></div>
-                <div class="lucky-star">🎯 钦点回答：【${luckyName}】</div>
+                <div class="lucky-star">🎯 钦点回答：${luckyName}</div>
             `;
             burstBox.classList.remove('hidden');
 

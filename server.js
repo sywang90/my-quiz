@@ -13,35 +13,39 @@ app.get('/', (req, res) => {
 let users = new Map(); 
 let quizStarted = false;
 let hasWinner = false;
-let isLocking = false; // 🔒 商业高并发分布式安全锁
+let isLocking = false; // 🔒 200人并发原子安全锁
 
 io.on('connection', (socket) => {
     socket.on('register', (name) => {
-        users.set(socket.id, name);
-        socket.emit('registered', name);
+        // 🚀 修正：允许重复名称进入系统。只做空值和空格的基本清洗
+        const cleanName = (name || "").trim();
+        if (!cleanName) return;
+        
+        users.set(socket.id, cleanName);
+        socket.emit('registered', cleanName);
         io.emit('updateUserList', Array.from(users.values()));
     });
 
     socket.on('startQuiz', () => {
         quizStarted = true;
         hasWinner = false;
-        isLocking = false; // 重置锁
+        isLocking = false; 
         io.emit('quizStarted'); 
     });
 
-    // 🚀 核心安全升级：确保 200 人高并发下绝对唯一的绝对绝杀
-    socket.on('pressButton', () => {
+    socket.on('pressButton', (clientName) => {
         if (!quizStarted || hasWinner || isLocking) {
             socket.emit('invalidPress');
             return;
         }
         
-        isLocking = true; // 瞬间原子锁闭，拦截后面慢了0.001秒的其余200人
+        const finalWinnerName = (clientName || users.get(socket.id) || "神秘选手").trim();
+        
+        isLocking = true; // 瞬间落锁
         hasWinner = true;
         quizStarted = false; 
         
-        const winnerName = users.get(socket.id) || "未知特工";
-        io.emit('quizEnd', winnerName);
+        io.emit('quizEnd', finalWinnerName);
     });
 
     socket.on('luckyDraw', () => {
@@ -61,5 +65,5 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3000;
 http.listen(PORT, () => {
-    console.log(`🎉 200人级商业抢答服务器已就绪，正在监听: ${PORT}`);
+    console.log(`🎉 200人战队级别抢答服务器已就绪，正在监听: ${PORT}`);
 });
