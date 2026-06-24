@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>⚡🏆  MCE 大力神杯系列赛 - 加入战队，竞速抢答！ 🏆⚡</title>
+    <title>⚡🏆 MCE 大力神杯系列赛 - 竞速抢答！ 🏆⚡</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     
     <style>
-        /* 🎨 全局电竞运动主题 */
+        /* 🎨 全局电竞运动主题变量 */
         :root {
             --bg-color: #0a2f1d;
             --primary-color: #ff007f;
@@ -40,7 +40,7 @@
             overflow-x: hidden;
         }
 
-        .container { max-width: 900px; margin: 0 auto; width: 100%; position: relative; z-index: 2; }
+        .container { max-width: 950px; margin: 0 auto; width: 100%; position: relative; z-index: 2; }
         
         .header-wrap {
             display: inline-flex;
@@ -104,7 +104,7 @@
             position: relative;
         }
 
-        /* ⏳ 3秒倒计时与全屏绝杀遮罩层 */
+        /* ⏳ 全屏倒计时与绝杀遮罩层 */
         #countdownOverlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(5, 20, 10, 0.98); 
@@ -225,7 +225,7 @@
 
         @keyframes gold-glow-flicker { 0%, 100% { text-shadow: 0 0 12px rgba(255, 215, 0, 0.7); } 50% { text-shadow: 0 0 24px rgba(255, 215, 0, 0.9); } }
         @keyframes trophy-bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-8px); } }
-        @keyframes pulse { 0% { box-shadow: 0 12px 0 #5a001e, 0 0 20px rgba(ff,2a,6d,0.5); } 100% { box-shadow: 0 12px 0 #5a001e, 0 0 50px rgba(ff,2a,6d,0.8); } }
+        @keyframes pulse { 0% { box-shadow: 0 12px 0 #5a001e, 0 0 20px rgba(255,42,109,0.5); } 100% { box-shadow: 0 12px 0 #5a001e, 0 0 50px rgba(255,42,109,0.8); } }
         @keyframes winner-pop { 0% { transform: scale(0.1); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         @keyframes winner-shaking { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(-4px, 4px) rotate(-1deg); } 60% { transform: translate(4px, -3px) rotate(1deg); } }
         @keyframes lucky-glow { 0% { filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); } 100% { filter: drop-shadow(0 0 25px rgba(255, 215, 0, 1)); } }
@@ -309,9 +309,10 @@
     <script>
         const socket = io();
         let myName = "";
-        let currentRole = "player"; // 默认为选手端
+        let currentRole = "player"; // 默认初始身份
         let countdownTimer = null;
 
+        // 🚀 核心逻辑升级：页面加载时强力解析角色暗号，消灭大屏不显示Bug
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             const role = urlParams.get('role');
@@ -322,22 +323,30 @@
                 document.getElementById('mainTitle').innerText = "SPEED RUSH";
                 document.getElementById('topHeaderTitle').innerText = "💻 MCE COMMAND PANEL";
                 if(document.querySelector('.cartoon-trophy')) document.querySelector('.cartoon-trophy').style.display = 'none';
+                
+                // 隐藏其他面板防冲突
+                document.getElementById('loginView').classList.add('hidden');
+                if(document.getElementById('screenView')) document.getElementById('screenView').classList.add('hidden');
             } else if (role === 'screen') {
-                // 🚀 核心逻辑：触发纯大屏观众视角
                 currentRole = "screen";
                 document.getElementById('screenView').classList.remove('hidden');
                 document.getElementById('mainTitle').innerText = "🏆 ARENA SCREEN (集结大屏)";
                 
-                // 自动生成给台下观众扫的纯选手域名二维码
+                // 隐藏其他面板防冲突
+                document.getElementById('loginView').classList.add('hidden');
+                document.getElementById('adminView').classList.add('hidden');
+
+                // 渲染出供台下200人扫码的无暗号原始选手端二维码
                 let staffUrl = window.location.origin + window.location.pathname;
+                document.getElementById("qrcode").innerHTML = ""; // 强刷清空防重叠
                 new QRCode(document.getElementById("qrcode"), {
                     text: staffUrl, width: 220, height: 220, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
                 });
             } else {
                 currentRole = "player";
                 document.getElementById('loginView').classList.remove('hidden');
-                document.getElementById('adminView').remove();
-                document.getElementById('screenView').remove();
+                if(document.getElementById('adminView')) document.getElementById('adminView').remove();
+                if(document.getElementById('screenView')) document.getElementById('screenView').remove();
             }
         };
 
@@ -377,7 +386,7 @@
             document.getElementById('burstOverlay').classList.add('hidden');
             
             runCountdown(3, () => {
-                document.getElementById('resultView').innerHTML = "⚡️ GO！向大力神杯冲刺！  ⚡️";
+                document.getElementById('resultView').innerHTML = "⚡️ GO！向大力神杯冲刺！ ⚡️";
                 const btn = document.getElementById('rushButton');
                 const status = document.getElementById('statusText');
                 if(btn && currentRole === 'player') {
