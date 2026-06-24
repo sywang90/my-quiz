@@ -13,11 +13,13 @@ app.get('/', (req, res) => {
 let users = new Map(); 
 let quizStarted = false;
 let hasWinner = false;
-let isLocking = false; // 🔒 200人并发原子安全锁
+let isLocking = false; 
 
 io.on('connection', (socket) => {
+    // 当新设备（包括大屏幕）链入时，同步刷新当前的在线名单
+    socket.emit('updateUserList', Array.from(users.values()));
+
     socket.on('register', (name) => {
-        // 🚀 修正：允许重复名称进入系统。只做空值和空格的基本清洗
         const cleanName = (name || "").trim();
         if (!cleanName) return;
         
@@ -41,7 +43,7 @@ io.on('connection', (socket) => {
         
         const finalWinnerName = (clientName || users.get(socket.id) || "神秘选手").trim();
         
-        isLocking = true; // 瞬间落锁
+        isLocking = true; 
         hasWinner = true;
         quizStarted = false; 
         
@@ -65,5 +67,5 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3000;
 http.listen(PORT, () => {
-    console.log(`🎉 200人战队级别抢答服务器已就绪，正在监听: ${PORT}`);
+    console.log(`🎉 200人全视角大屏联动服务器已就绪，正在监听: ${PORT}`);
 });
