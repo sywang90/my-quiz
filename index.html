@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>⚡🏆 MCE 大力神杯系列赛 - 加入战队，竞速抢答！ 🏆⚡</title>
+    <title>⚡🏆  MCE 大力神杯系列赛 - 加入战队，竞速抢答！ 🏆⚡</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     
     <style>
-        /* 🎨 全局电竞运动主题变量 */
+        /* 🎨 全局电竞运动主题 */
         :root {
             --bg-color: #0a2f1d;
             --primary-color: #ff007f;
@@ -40,9 +40,8 @@
             overflow-x: hidden;
         }
 
-        .container { max-width: 950px; margin: 0 auto; width: 100%; position: relative; z-index: 2; }
+        .container { max-width: 800px; margin: 0 auto; width: 100%; position: relative; z-index: 2; }
         
-        /* 🏆 奖杯在文字上一行上下排列 */
         .header-wrap {
             display: inline-flex;
             flex-direction: column;
@@ -88,43 +87,28 @@
         }
 
         #resultView { 
-            font-size: 1.8rem; 
+            font-size: 1.5rem; 
             color: #fff; 
             font-weight: bold; 
             margin: 15px auto; 
-            padding: 15px 25px;
-            background: rgba(0, 0, 0, 0.5);
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.4);
             border-radius: 15px;
-            border: 2px solid rgba(0, 240, 255, 0.4);
-            min-height: 65px; 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            min-height: 55px; 
             display: flex;
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(10px);
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
             position: relative;
         }
-
-        /* ⏳ 3秒红色倒计时遮罩层 */
-        #countdownOverlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(5, 20, 10, 0.98); 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            z-index: 999; 
-        }
-        #countdownNumber { 
-            font-size: 15rem; font-weight: 900; 
-            color: #ff003c; 
-            text-shadow: 0 0 40px rgba(255, 0, 60, 0.6), 0 0 80px rgba(255, 0, 60, 0.4); 
-            animation: popIn 0.5s ease-out infinite alternate; 
-        }
-        #countdownTips { font-size: 2rem; color: var(--gold-color); font-weight: bold; margin-bottom: 20px; letter-spacing: 4px; text-shadow: 0 0 12px rgba(255,215,0,0.4); }
 
         #burstOverlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -132,13 +116,12 @@
             z-index: 1000;
         }
 
-        /* 🚀 第一名抢到者狂暴震动3秒 */
         .burst-winner {
             font-family: "Microsoft YaHei", sans-serif;
-            font-size: 4rem;
+            font-size: 3.5rem;
             font-weight: 900;
             color: #39ff14; 
-            text-shadow: 0 0 25px rgba(57, 255, 20, 0.9), 0 0 50px rgba(57, 255, 20, 0.6);
+            text-shadow: 0 0 20px rgba(57, 255, 20, 0.8), 0 0 40px rgba(57, 255, 20, 0.5);
             animation: winner-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.5) forwards, winner-shaking 0.05s infinite;
             animation-duration: 0.4s, 3s; 
             animation-iteration-count: 1, 60; 
@@ -148,10 +131,9 @@
             padding: 0 20px;
         }
 
-        /* 🚀 随机点将人名霓虹闪现3秒 */
         .lucky-star {
             font-family: "Microsoft YaHei", sans-serif;
-            font-size: 4rem;
+            font-size: 3.5rem;
             font-weight: 900;
             color: var(--gold-color);
             text-shadow: 0 0 25px rgba(255, 215, 0, 0.9), 0 0 50px rgba(255, 215, 0, 0.6);
@@ -161,7 +143,6 @@
             padding: 0 20px;
         }
 
-        /* 🚀 烟雾大爆破效果 */
         .smoke-cloud {
             position: absolute;
             top: 50%; left: 50%;
@@ -189,51 +170,137 @@
         }
 
         input, select { 
-            padding: 16px 20px; font-size: 1.1rem; border-radius: 16px; border: 2px solid rgba(255, 255, 255, 0.2); 
-            width: 100%; max-width: 320px; text-align: center; text-align-last: center;
-            background: rgba(0, 0, 0, 0.6); color: #fff; outline: none; transition: 0.3s; margin-bottom: 20px;
+            padding: 16px 20px; 
+            font-size: 1.1rem; 
+            border-radius: 16px; 
+            border: 2px solid rgba(255, 255, 255, 0.2); 
+            width: 100%; 
+            max-width: 320px; 
+            text-align: center; 
+            text-align-last: center; /* 让select文字也居中 */
+            background: rgba(0, 0, 0, 0.6); 
+            color: #fff; 
+            outline: none; 
+            transition: 0.3s;
+            margin-bottom: 20px;
         }
-        input:focus, select:focus { border-color: var(--secondary-color); box-shadow: 0 0 15px rgba(0, 240, 255, 0.5); }
-        select option { background: #143d1a; color: #fff; }
+        input:focus, select:focus { 
+            border-color: var(--secondary-color); 
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+        }
+        select option { background: #143d1a; color: #fff; } /* 适配手机选择框下拉背景 */
 
         .action-btn { 
-            background: linear-gradient(135deg, var(--primary-color) 0%, #b0005d 100%); color: white; border: none; 
-            padding: 16px 40px; font-size: 1.2rem; font-weight: bold; border-radius: 16px; cursor: pointer; 
-            transition: 0.2s; box-shadow: 0 6px 20px rgba(255, 0, 127, 0.4); width: 100%; max-width: 320px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #b0005d 100%); 
+            color: white; 
+            border: none; 
+            padding: 16px 40px; 
+            font-size: 1.2rem; 
+            font-weight: bold;
+            border-radius: 16px; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            box-shadow: 0 6px 20px rgba(255, 0, 127, 0.4);
+            width: 100%;
+            max-width: 320px;
         }
 
-        #statusText { font-size: 1.1rem; font-weight: bold; padding: 12px; border-radius: 12px; margin: 15px auto; max-width: 340px; }
+        #statusText { 
+            font-size: 1.1rem; 
+            font-weight: bold; 
+            padding: 12px; 
+            border-radius: 12px; 
+            margin: 15px auto;
+            max-width: 340px;
+            transition: 0.3s;
+        }
         .status-lock { color: var(--warning-color); background: rgba(255, 170, 0, 0.2); border: 1px solid rgba(255, 170, 0, 0.3); }
         .status-go { color: var(--success-color); background: rgba(57, 255, 20, 0.2); border: 1px solid rgba(57, 255, 20, 0.4); animation: breath 1s infinite alternate; }
 
-        /* 🔘 员工端抢答大按键 */
         #rushButton { 
-            width: 240px; height: 240px; border-radius: 50%; font-size: 2.2rem; font-weight: 950;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.5) 100%), #1a3d24;
-            color: #668877; box-shadow: 0 12px 0 #0d2616, inset 0 6px 15px rgba(255,255,255,0.1), 0 15px 25px rgba(0,0,0,0.6); 
-            margin: 30px auto; display: flex; align-items: center; justify-content: center; border: 8px solid #255433; 
-            transition: all 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: not-allowed; position: relative;
+            width: 240px; 
+            height: 240px; 
+            border-radius: 50%; 
+            font-size: 2.2rem; 
+            font-weight: 950;
+            background: 
+                radial-gradient(circle at center, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.5) 100%),
+                #1a3d24;
+            color: #668877; 
+            box-shadow: 0 12px 0 #0d2616, inset 0 6px 15px rgba(255,255,255,0.1), 0 15px 25px rgba(0,0,0,0.6); 
+            margin: 30px auto; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 8px solid #255433; 
+            transition: all 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            cursor: not-allowed;
+            position: relative;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
+        
         #rushButton.active { 
-            background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.4) 100%), #ff2a6d; 
-            color: white; box-shadow: 0 12px 0 #5a001e, 0 0 50px rgba(255, 42, 109, 0.8); border: 8px solid #ff6596; 
-            cursor: pointer; animation: pulse 0.6s infinite alternate, shake 0.08s infinite;
+            background: 
+                radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.4) 100%),
+                #ff2a6d; 
+            color: white; 
+            box-shadow: 0 12px 0 #5a001e, 0 0 50px rgba(255, 42, 109, 0.8); 
+            border: 8px solid #ff6596; 
+            cursor: pointer; 
+            animation: pulse 0.6s infinite alternate, shake 0.08s infinite;
+        }
+        #rushButton:active:not(:disabled) {
+            transform: translateY(10px);
+            box-shadow: 0 2px 0 #5a001e, 0 0 25px rgba(255, 42, 109, 0.5);
         }
 
-        .dashboard { display: flex; justify-content: space-around; align-items: flex-start; margin-top: 15px; flex-wrap: wrap; gap: 25px; text-align: left; }
-        .panel { background: rgba(0, 0, 0, 0.55); padding: 30px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.15); flex: 1; min-width: 320px; box-shadow: 0 12px 35px rgba(0,0,0,0.6); backdrop-filter: blur(15px); }
+        #countdownOverlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(5, 20, 10, 0.98); 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            z-index: 999; 
+        }
+        #countdownNumber { 
+            font-size: 15rem; font-weight: 900; 
+            color: #ff003c; 
+            text-shadow: 0 0 40px rgba(255, 0, 60, 0.6), 0 0 80px rgba(255, 0, 60, 0.4); 
+            animation: popIn 0.5s ease-out infinite alternate; 
+        }
+        #countdownTips { font-size: 2rem; color: var(--gold-color); font-weight: bold; margin-bottom: 20px; letter-spacing: 4px; text-shadow: 0 0 12px rgba(255,215,0,0.4); }
+
+        .dashboard { display: flex; justify-content: space-around; align-items: flex-start; margin-top: 10px; flex-wrap: wrap; gap: 20px; text-align: left; }
+        .panel { background: rgba(0, 0, 0, 0.6); padding: 25px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); flex: 1; min-width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         #qrcode { background: white; padding: 12px; display: inline-block; border-radius: 12px; margin-top: 10px; }
-        .user-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; max-height: 350px; overflow-y: auto; }
-        .user-badge { background: rgba(255, 255, 255, 0.08); padding: 10px 18px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.3); font-size: 1.05rem; font-weight: bold; }
+        .user-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; max-height: 250px; overflow-y: auto; }
+        .user-badge { background: rgba(255, 255, 255, 0.1); padding: 8px 16px; border-radius: 30px; border: 1px solid #fff; font-size: 0.95rem; }
         .admin-action-btn { background: linear-gradient(135deg, #00FF66 0%, #009933 100%); width: auto; max-width: none; border: none; font-size: 1.2rem; color: #001122; margin-bottom: 15px; }
 
-        @keyframes gold-glow-flicker { 0%, 100% { text-shadow: 0 0 12px rgba(255, 215, 0, 0.7); } 50% { text-shadow: 0 0 24px rgba(255, 215, 0, 0.9); } }
-        @keyframes trophy-bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-8px); } }
-        @keyframes pulse { 0% { box-shadow: 0 12px 0 #5a001e, 0 0 20px rgba(255,42,109,0.5); } 100% { box-shadow: 0 12px 0 #5a001e, 0 0 50px rgba(255,42,109,0.8); } }
+        @keyframes gold-glow-flicker {
+            0%, 100% { text-shadow: 0 0 12px rgba(255, 215, 0, 0.7), 0 0 24px rgba(255, 215, 0, 0.4); opacity: 1; }
+            50% { text-shadow: 0 0 18px rgba(255, 215, 0, 0.9), 0 0 35px rgba(255, 215, 0, 0.6); opacity: 0.95; }
+        }
+        @keyframes trophy-bounce { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-8px) scale(1.05); } }
+        @keyframes pulse { 0% { box-shadow: 0 12px 0 #5a001e, 0 0 30px rgba(255, 42, 109, 0.5); } 100% { box-shadow: 0 12px 0 #5a001e, 0 0 60px rgba(255, 42, 109, 0.9); } }
+        @keyframes breath { 0% { opacity: 0.6; } 100% { opacity: 1; } }
+        @keyframes popIn { 0% { transform: scale(0.85); } 100% { transform: scale(1.05); } }
+        @keyframes shake { 0% { transform: translate(0, 0); } 50% { transform: translate(-1px, 1px); } 100% { transform: translate(1px, -1px); } }
         @keyframes winner-pop { 0% { transform: scale(0.1); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        @keyframes winner-shaking { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(-4px, 4px) rotate(-1deg); } 60% { transform: translate(4px, -3px) rotate(1deg); } }
-        @keyframes lucky-glow { 0% { filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); } 100% { filter: drop-shadow(0 0 25px rgba(255, 215, 0, 1)); } }
-        @keyframes smoke-burst-disperse { 0% { box-shadow: 0 0 10px 10px rgba(255,0,127,0.9), 0 0 10px 10px rgba(0,240,255,0.9); opacity: 1; } 100% { box-shadow: 0 0 18px 150px rgba(255,0,127,0), 0 0 250px 180px rgba(0,240,255,0); transform: translate(-50%, -50%) scale(5); opacity: 0; } }
+        @keyframes winner-shaking { 
+            0%, 100% { transform: scale(1) translate(0, 0) rotate(0deg); } 
+            20% { transform: scale(1) translate(-4px, 4px) rotate(-1.5deg); } 
+            40% { transform: scale(1) translate(4px, -3px) rotate(1.5deg); }
+            60% { transform: scale(1) translate(-3px, -2px) rotate(-1deg); }
+            80% { transform: scale(1) translate(3px, 3px) rotate(1deg); }
+        }
+        @keyframes lucky-glow {
+            0% { filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); }
+            100% { filter: drop-shadow(0 0 25px rgba(255, 215, 0, 1)); }
+        }
+        @keyframes smoke-burst-disperse {
+            0% { box-shadow: 0 0 10px 10px rgba(255,0,127,0.9), 0 0 10px 10px rgba(0,240,255,0.9); opacity: 1; }
+            100% { box-shadow: 0 0 18px 120px rgba(255,0,127,0), 0 0 250px 160px rgba(0,240,255,0); transform: translate(-50%, -50%) scale(4.5); opacity: 0; }
+        }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -257,7 +324,7 @@
                 <path d="M20 48H44V56H20V48Z" fill="#8B5A2B"/>
                 <circle cx="32" cy="20" r="6" fill="#FFF" opacity="0.3"/>
             </svg>
-            <div class="top-event-title" id="topHeaderTitle">MCE 大力神杯</div>
+            <div class="top-event-title">MCE 大力神杯</div>
         </div>
         
         <h1 id="mainTitle">⚡ SPEED RUSH ⚡</h1>
@@ -266,8 +333,10 @@
 
         <div id="loginView" class="hidden glass-panel">
             <h2 style="color: var(--secondary-color); font-size: 1.5rem; margin-top: 0;">加入这场博弈</h2>
+            
             <p style="color: #aaa; margin-bottom: 10px;">请输入您的个人昵称：</p>
             <input type="text" id="usernameInput" placeholder="例如：张三" autocomplete="off">
+            
             <p style="color: #aaa; margin-bottom: 10px; margin-top: 10px;">请选择您所属的战队：</p>
             <select id="teamSelect">
                 <option value="" disabled selected>-- 请选择您的战队 --</option>
@@ -278,7 +347,8 @@
                 <option value="南区">南区</option>
                 <option value="北一区">北一区</option>
                 <option value="西北区">西北区</option>
-            </select><br>
+            </select>
+            <br>
             <button class="action-btn" onclick="register()" style="margin-top: 15px;">锁定身份 ➡️ 入场</button>
         </div>
 
@@ -289,83 +359,76 @@
         </div>
 
         <div id="adminView" class="dashboard hidden">
+            <div class="panel">
+                <h3 style="color: var(--secondary-color); margin-top: 0; font-size: 1.2rem;">📢 赛事集结专属二维码</h3>
+                <div id="qrcode"></div>
+                <h4 style="margin-top: 20px; margin-bottom: 10px; color: #aaa;">已就位选手 (<span id="userCount" style="color:var(--gold-color); font-weight: bold;">0</span> 人)：</h4>
+                <div class="user-list" id="userList"></div>
+            </div>
+            
             <div class="panel" style="display: flex; flex-direction: column; justify-content: center;">
-                <h3 style="color: var(--gold-color); margin-top: 0; font-size: 1.2rem;">⚙️ MCE 赛事中央控制台</h3>
+                <h3 style="color: var(--gold-color); margin-top: 0; font-size: 1.2rem;">⚙️ MCE 赛事中控台</h3>
                 <button id="adminStartBtn" class="action-btn admin-action-btn" onclick="startQuiz()">🔥 启动极速抢答（3秒倒计）</button>
                 <button class="action-btn admin-action-btn" onclick="luckyDraw()">🎯 随机点将回答啦！ </button>
             </div>
         </div>
-
-        <div id="screenView" class="dashboard hidden" style="width:100%;">
-            <div class="panel" style="text-align: center; flex: 1.2; min-width: 300px;">
-                <h3 style="color: var(--secondary-color); margin-top: 0; font-size: 1.3rem;">📢 微信扫码·锁定战队集结</h3>
-                <div id="qrcode"></div>
-                <p style="color: #668877; font-size: 1rem; margin-top: 15px; font-weight: bold; animation: breath 1.5s infinite alternate;">🔥 建议断开现场Wi-Fi，使用5G流量参与对决！</p>
-            </div>
-            <div class="panel" style="flex: 1.8; min-width: 350px;">
-                <h3 style="color: var(--gold-color); margin-top: 0; font-size: 1.3rem;">🔬 已就位特工选手名单 (<span id="userCount" style="color:var(--primary-color); font-weight: bold;">0</span> 人)：</h3>
-                <div class="user-list" id="userList"></div>
-            </div>
-        </div>
-
     </div>
 
     <script>
         const socket = io();
         let myName = "";
-        let currentRole = "player"; 
+        let isClientAdmin = false;
         let countdownTimer = null;
 
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
-            const role = urlParams.get('role');
+            isClientAdmin = urlParams.get('role') === 'admin';
 
-            if (role === 'admin') {
-                currentRole = "admin";
+            if (isClientAdmin) {
                 document.getElementById('adminView').classList.remove('hidden');
                 document.getElementById('mainTitle').innerText = "SPEED RUSH";
-                document.getElementById('topHeaderTitle').innerText = "💻 MCE COMMAND PANEL";
+                document.querySelector('.top-event-title').innerText = "💻 MCE COMMAND PANEL";
                 if(document.querySelector('.cartoon-trophy')) document.querySelector('.cartoon-trophy').style.display = 'none';
-                document.getElementById('loginView').classList.add('hidden');
-            } else if (role === 'screen') {
-                currentRole = "screen";
-                document.getElementById('screenView').classList.remove('hidden');
-                document.getElementById('mainTitle').innerText = "🏆 ARENA SCREEN (集结大屏)";
-                document.getElementById('loginView').classList.add('hidden');
-
+                
                 let staffUrl = window.location.origin + window.location.pathname;
-                document.getElementById("qrcode").innerHTML = ""; 
                 new QRCode(document.getElementById("qrcode"), {
-                    text: staffUrl, width: 220, height: 220, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
+                    text: staffUrl,
+                    width: 180,
+                    height: 180,
+                    colorDark : "#000000",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
                 });
             } else {
-                currentRole = "player";
                 document.getElementById('loginView').classList.remove('hidden');
-                if(document.getElementById('adminView')) document.getElementById('adminView').remove();
-                if(document.getElementById('screenView')) document.getElementById('screenView').remove();
+                document.getElementById('adminView').remove(); 
             }
         };
 
         function register() {
             const nickname = document.getElementById('usernameInput').value.trim();
             const team = document.getElementById('teamSelect').value;
+            
+            // 🚀 核心验证逻辑：昵称不能为空，且必须选择战队
             if (!nickname) return alert('代号不能为空，请输入您的昵称！');
             if (!team) return alert('请选择您所属的战队！');
+            
+            // 将战队名和昵称融合在一起，作为系统的最终通信身份
             myName = `【${team}】${nickname}`;
             socket.emit('register', myName);
         }
 
         function pressButton() { 
-            if (!myName) myName = document.getElementById('myTitle').innerText.trim();
+            if (!myName) {
+                myName = document.getElementById('myTitle').innerText.trim();
+            }
             socket.emit('pressButton', myName); 
         }
 
         socket.on('registered', (name) => {
-            if (currentRole === 'player') {
-                document.getElementById('loginView').classList.add('hidden');
-                document.getElementById('playerView').classList.remove('hidden');
-                document.getElementById('myTitle').innerText = name;
-            }
+            document.getElementById('loginView').classList.add('hidden');
+            document.getElementById('playerView').classList.remove('hidden');
+            document.getElementById('myTitle').innerText = name;
         });
 
         socket.on('updateUserList', (list) => {
@@ -380,11 +443,13 @@
 
         socket.on('quizStarted', () => {
             document.getElementById('burstOverlay').classList.add('hidden');
+            
             runCountdown(3, () => {
-                document.getElementById('resultView').innerHTML = "⚡️ GO！向大力神杯冲刺！ ⚡️";
+                document.getElementById('resultView').innerHTML = "⚡️ GO！向大力神杯冲刺！  ⚡️";
+                
                 const btn = document.getElementById('rushButton');
                 const status = document.getElementById('statusText');
-                if(btn && currentRole === 'player') {
+                if(btn && !isClientAdmin) {
                     btn.disabled = false;
                     btn.innerText = "RUSH!";
                     btn.classList.add('active');
@@ -398,10 +463,13 @@
             const overlay = document.getElementById('countdownOverlay');
             const numEl = document.getElementById('countdownNumber');
             const adminBtn = document.getElementById('adminStartBtn');
+            
             if(adminBtn) adminBtn.disabled = true; 
             overlay.classList.remove('hidden'); 
+            
             let current = seconds;
             numEl.innerText = current;
+            
             clearInterval(countdownTimer);
             countdownTimer = setInterval(() => {
                 current--;
@@ -422,30 +490,40 @@
             clearInterval(countdownTimer); 
             document.getElementById('countdownOverlay').classList.add('hidden');
             if(document.getElementById('adminStartBtn')) document.getElementById('adminStartBtn').disabled = false;
+
             document.getElementById('resultView').innerText = `🏆 本题得主：${winnerName} 成功捧杯！`;
+
             const burstBox = document.getElementById('burstOverlay');
             burstBox.innerHTML = `
                 <div class="smoke-cloud"></div>
                 <div class="burst-winner">🏆 绝杀：${winnerName} 夺得头筹！</div>
             `;
             burstBox.classList.remove('hidden');
-            setTimeout(() => { burstBox.classList.add('hidden'); }, 4500); 
-            if(currentRole === 'player') lockPlayerButton("已有人捷足先登，蓄力下一题...");
+
+            setTimeout(() => {
+                burstBox.classList.add('hidden');
+            }, 4500); 
+            
+            lockPlayerButton("已有人捷足先登，蓄力下一题...");
         });
 
         socket.on('drawResult', (luckyName) => {
             document.getElementById('resultView').innerHTML = `🎯 命运钦点：${luckyName} 请上前回答！`;
+
             const burstBox = document.getElementById('burstOverlay');
             burstBox.innerHTML = `
                 <div class="smoke-cloud"></div>
                 <div class="lucky-star">🎯 钦点回答：${luckyName}</div>
             `;
             burstBox.classList.remove('hidden');
-            setTimeout(() => { burstBox.classList.add('hidden'); }, 3000);
+
+            setTimeout(() => {
+                burstBox.classList.add('hidden');
+            }, 3000);
         });
 
         socket.on('invalidPress', () => {
-            if(currentRole === 'player') lockPlayerButton("抢跑无效！请等候发令！");
+            lockPlayerButton("抢跑无效！请等候发令！");
         });
 
         function lockPlayerButton(msg) {
